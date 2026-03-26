@@ -1,0 +1,143 @@
+{% extends "admin/dj_signals_panel/base.html" %}
+{% load i18n admin_urls static %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'dj_signals_panel:index' %}">{% trans 'Dj Signals Panel' %}</a>
+    &rsaquo; {{ signal.name }}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <!-- Back to List Link -->
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'dj_signals_panel:index' %}" style="color: var(--link-fg, #417690); text-decoration: none;">
+            ← {% trans "Back to Signal List" %}
+        </a>
+    </div>
+
+    <!-- Signal Metadata Card -->
+    <div class="module signal-detail-card">
+        <h2>{{ signal.name }}</h2>
+        <table class="key-value-table">
+            <tbody>
+                <tr>
+                    <th>{% trans "Signal ID" %}</th>
+                    <td><code>{{ signal.signal_id }}</code></td>
+                </tr>
+                <tr>
+                    <th>{% trans "Module" %}</th>
+                    <td><code>{{ signal.module }}</code></td>
+                </tr>
+                <tr>
+                    <th>{% trans "Category" %}</th>
+                    <td>
+                        <span class="category-badge category-{{ signal.category }}">{{ signal.category|title }}</span>
+                    </td>
+                </tr>
+                {% if signal.app_label %}
+                <tr>
+                    <th>{% trans "App" %}</th>
+                    <td>{{ signal.app_label }}</td>
+                </tr>
+                {% endif %}
+                {% if signal.providing_args %}
+                <tr>
+                    <th>{% trans "Providing Args" %}</th>
+                    <td>
+                        {% for arg in signal.providing_args %}
+                            <code class="providing-arg">{{ arg }}</code>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <th>{% trans "Receiver Count" %}</th>
+                    <td>
+                        <span class="receiver-count {% if not receivers %}no-receivers{% endif %}">
+                            {{ receivers|length }}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Receivers Table -->
+    <div class="module" style="margin-top: 20px;">
+        <h2>{% trans "Connected Receivers" %}</h2>
+        {% if receivers %}
+        <table id="result_list">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <div class="text">{% trans "Function" %}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">{% trans "Module" %}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">{% trans "Location" %}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">{% trans "Sender" %}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">{% trans "Dispatch UID" %}</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in receivers %}
+                <tr class="{% cycle 'row1' 'row2' %}">
+                    <td>
+                        <code class="receiver-name">{{ r.qualname|default:r.function_name }}</code>
+                    </td>
+                    <td>
+                        <code class="module-path">{{ r.module }}</code>
+                    </td>
+                    <td>
+                        {% if r.source_file %}
+                            <code class="source-location">{{ r.source_file }}:{{ r.source_line|default:"?" }}</code>
+                        {% else %}
+                            <span class="muted">{% trans "unknown" %}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if r.sender %}
+                            <code>{{ r.sender }}</code>
+                        {% else %}
+                            <span class="muted">{% trans "any" %}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if r.dispatch_uid %}
+                            <code>{{ r.dispatch_uid }}</code>
+                        {% else %}
+                            <span class="muted">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if r.source_preview %}
+                <tr class="source-preview-row">
+                    <td colspan="5">
+                        <details class="source-preview-details">
+                            <summary>{% trans "View Source" %}</summary>
+                            <pre class="source-preview"><code>{{ r.source_preview }}</code></pre>
+                        </details>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="paginator">
+            {% trans "No receivers are connected to this signal." %}
+        </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -2,7 +2,152 @@
 {% load i18n admin_urls static admin_list %}
 
 {% block content %}
-<div class="module">
-    <h2>Dj Signals Panel</h2>
+<div id="content-main">
+    <!-- Statistics Section -->
+    <div class="instance-stats">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-label">{% trans "Total Signals" %}</div>
+                <div class="stat-value">{{ stats.total_signals }}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">{% trans "Total Receivers" %}</div>
+                <div class="stat-value stat-success">{{ stats.total_receivers }}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">{% trans "No Receivers" %}</div>
+                <div class="stat-value {% if stats.signals_without_receivers > 0 %}stat-warning{% else %}stat-disabled{% endif %}">
+                    {{ stats.signals_without_receivers }}
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">{% trans "Most Connected" %}</div>
+                <div class="stat-value">
+                    {% if stats.most_connected_signal %}
+                        {{ stats.most_connected_signal }} ({{ stats.most_connected_count }})
+                    {% else %}
+                        —
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter Form -->
+    <div class="search-form">
+        <form method="get" action="">
+            <div class="search-form-row">
+                <div class="search-form-fields">
+                    <div class="search-field-group">
+                        <label for="searchbar">{% trans "Search Signals" %}</label>
+                        <input
+                            type="text"
+                            id="searchbar"
+                            name="q"
+                            value="{{ search_query }}"
+                            placeholder="{% trans 'Search by name, module, or category...' %}"
+                            style="width: 300px;"
+                        >
+                    </div>
+                    <div class="search-field-group">
+                        <label for="category_filter">{% trans "Category" %}</label>
+                        <select name="category" id="category_filter">
+                            <option value="">{% trans "All" %}</option>
+                            {% for cat in available_categories %}
+                            <option value="{{ cat }}" {% if category_filter == cat %}selected{% endif %}>
+                                {{ cat|title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="search-field-group">
+                        <label>&nbsp;</label>
+                        <input type="submit" value="{% trans 'Search' %}">
+                    </div>
+                </div>
+                <div class="search-help">
+                    <p class="help">
+                        {% trans "Search across signal names and modules. Filter by category to narrow results." %}
+                    </p>
+                </div>
+            </div>
+        </form>
+
+        {% if category_filter %}
+        <div class="active-filters">
+            <strong>{% trans "Active Filter:" %}</strong>
+            <span class="filter-badge filter-badge-active">
+                {{ category_filter|title }}
+                <a href="?{% if search_query %}q={{ search_query }}{% endif %}" class="filter-remove" title="{% trans 'Remove filter' %}">×</a>
+            </span>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Signals Table -->
+    <div class="module">
+        {% if search_query or category_filter %}
+        <p class="help">
+            {% blocktrans count counter=total_displayed %}
+                Showing {{ counter }} signal
+            {% plural %}
+                Showing {{ counter }} signals
+            {% endblocktrans %}
+        </p>
+        {% endif %}
+
+        {% if signals %}
+        <table id="result_list">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <div class="text">{% trans "Signal" %}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">{% trans "Module" %}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">{% trans "Category" %}</div>
+                    </th>
+                    <th scope="col">
+                        <div class="text">{% trans "Receivers" %}</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sig in signals %}
+                <tr class="{% cycle 'row1' 'row2' %}{% if sig.has_issues %} signal-has-issues{% endif %}">
+                    <td>
+                        <a href="{% url 'dj_signals_panel:signal_detail' sig.signal_id %}" class="signal-link">
+                            <code>{{ sig.name }}</code>
+                        </a>
+                    </td>
+                    <td>
+                        <code class="module-path">{{ sig.module }}</code>
+                    </td>
+                    <td>
+                        <a href="?category={{ sig.category }}{% if search_query %}&q={{ search_query }}{% endif %}" class="category-filter-link">
+                            <span class="category-badge category-{{ sig.category }}">{{ sig.category|title }}</span>
+                        </a>
+                    </td>
+                    <td>
+                        <span class="receiver-count {% if sig.receiver_count == 0 %}no-receivers{% endif %}">
+                            {{ sig.receiver_count }}
+                        </span>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="paginator">
+            {% if search_query %}
+                {% trans "No signals match your search criteria." %}
+            {% else %}
+                {% trans "No signals found." %}
+            {% endif %}
+        </p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

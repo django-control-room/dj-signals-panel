@@ -5,6 +5,7 @@ from django.utils.html import format_html, mark_safe
 DEFAULTS = {
     "LOAD_DEFAULT_CSS": True,
     "EXTRA_CSS": [],
+    "SIGNAL_MODULES": [],
 }
 
 
