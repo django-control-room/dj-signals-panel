@@ -5,9 +5,7 @@
 
 {% block extrahead %}
 {{ block.super }}
-{% if dj_cr_load_default_css %}<style type="text/css">
-    {% include "admin/dj_signals_panel/styles.css" %}
-</style>{% endif %}
+{% if dj_cr_load_default_css %}<link rel="stylesheet" href="{% static 'dj_signals_panel/css/styles.css' %}">{% endif %}
 {{ dj_cr_extra_css }}
 {% endblock %}
 

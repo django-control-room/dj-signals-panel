@@ -1,6 +1,28 @@
 {% extends "admin/dj_signals_panel/base.html" %}
 {% load i18n admin_urls static %}
 
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'dj_signals_panel/vendor/highlight-github-dark.min.css' %}">
+<script src="{% static 'dj_signals_panel/vendor/highlight.min.js' %}"></script>
+<script src="{% static 'dj_signals_panel/vendor/highlight-python.min.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('details.source-preview-details').forEach(function (details) {
+        details.addEventListener('toggle', function () {
+            if (details.open) {
+                details.querySelectorAll('pre.source-preview code').forEach(function (el) {
+                    if (!el.dataset.highlighted) {
+                        hljs.highlightElement(el);
+                    }
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+
 {% block breadcrumbs %}
 <div class="breadcrumbs">
     <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
@@ -117,7 +139,7 @@
                     <td colspan="5">
                         <details class="source-preview-details">
                             <summary>{% trans "View Source" %}</summary>
-                            <pre class="source-preview"><code>{{ r.source_preview }}</code></pre>
+                            <pre class="source-preview"><code class="language-python">{{ r.source_preview }}</code></pre>
                         </details>
                     </td>
                 </tr>
