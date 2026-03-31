@@ -6,6 +6,7 @@ DEFAULTS = {
     "LOAD_DEFAULT_CSS": True,
     "EXTRA_CSS": [],
     "SIGNAL_MODULES": [],
+    "SHOW_SOURCE": False,
 }
 
 
@@ -24,4 +25,5 @@ def get_css_context():
     return {
         "dj_cr_load_default_css": get_config("LOAD_DEFAULT_CSS"),
         "dj_cr_extra_css": mark_safe("\n".join(links)),
+        "dj_cr_show_source": get_config("SHOW_SOURCE"),
     }

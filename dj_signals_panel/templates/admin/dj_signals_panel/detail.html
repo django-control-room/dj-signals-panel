@@ -3,6 +3,7 @@
 
 {% block extrahead %}
 {{ block.super }}
+{% if dj_cr_show_source %}
 <link rel="stylesheet" href="{% static 'dj_signals_panel/vendor/highlight-github-dark.min.css' %}">
 <script src="{% static 'dj_signals_panel/vendor/highlight.min.js' %}"></script>
 <script src="{% static 'dj_signals_panel/vendor/highlight-python.min.js' %}"></script>
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+{% endif %}
 {% endblock %}
 
 {% block breadcrumbs %}

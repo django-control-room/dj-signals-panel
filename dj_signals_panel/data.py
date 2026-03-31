@@ -171,7 +171,7 @@ class Receiver:
             source_line=self.source_line,
             sender=self.sender,
             dispatch_uid=self.dispatch_uid,
-            source_preview=self.get_source_preview(),
+            source_preview=self.get_source_preview() if get_config("SHOW_SOURCE") else None,
         )
 
 
