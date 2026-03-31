@@ -64,29 +64,15 @@ class SignalDetail:
     receivers: list[ReceiverInfo] = field(default_factory=list)
 
 
-BUILTIN_SIGNALS: dict[str, list[str]] = {
-    "django.db.models.signals": [
-        "pre_init",
-        "post_init",
-        "pre_save",
-        "post_save",
-        "pre_delete",
-        "post_delete",
-        "m2m_changed",
-    ],
-    "django.core.signals": [
-        "request_started",
-        "request_finished",
-        "got_request_exception",
-        "setting_changed",
-    ],
-    "django.test.signals": [
-        "template_rendered",
-    ],
-    "django.db.backends.signals": [
-        "connection_created",
-    ],
-}
+# Django's built-in signal modules are not attached to a registered app config,
+# so they cannot be found by scanning installed apps. We seed the scan with
+# their module paths only — individual signal names are discovered via dir().
+_DJANGO_SIGNAL_MODULES: list[str] = [
+    "django.db.models.signals",
+    "django.core.signals",
+    "django.test.signals",
+    "django.db.backends.signals",
+]
 
 
 class Receiver:
@@ -335,43 +321,23 @@ class SignalUtils:
         return parts[0]
 
     @staticmethod
-    def discover_builtin() -> list[DiscoveredSignal]:
-        """Return all known built-in Django signals."""
-        results: list[DiscoveredSignal] = []
-        for module_path, signal_names in BUILTIN_SIGNALS.items():
-            try:
-                mod = importlib.import_module(module_path)
-            except ImportError:
-                continue
-            app_label = SignalUtils.module_to_app_label(module_path)
-            for name in signal_names:
-                signal_obj = getattr(mod, name, None)
-                if signal_obj is None or not isinstance(signal_obj, DjangoSignal):
-                    continue
-                results.append(
-                    DiscoveredSignal.from_obj(
-                        signal_obj,
-                        f"{module_path}.{name}",
-                        name,
-                        module_path,
-                        app_label,
-                    )
-                )
-        return results
-
-    @staticmethod
-    def discover_custom() -> list[DiscoveredSignal]:
+    def discover_all() -> list[DiscoveredSignal]:
         """
-        Return all custom signals found across installed apps.
+        Discover all signals: Django built-ins and app-defined signals.
 
-        Scans every app's .signals and .handlers modules automatically,
-        plus any extra modules listed in SIGNAL_MODULES config.
+        Scans:
+        - _DJANGO_SIGNAL_MODULES: built-in Django signal module paths that
+          are not reachable via the app config registry.
+        - Every installed app's .signals and .handlers modules.
+        - Any extra module paths from the SIGNAL_MODULES config.
+
+        All modules are scanned the same way — dir() to find Signal instances.
         """
-        builtin_ids = {
-            f"{mod}.{name}" for mod, names in BUILTIN_SIGNALS.items() for name in names
-        }
+        modules_to_scan: list[str] = list(_DJANGO_SIGNAL_MODULES)
 
-        modules_to_scan = list(SignalUtils.get_signal_modules())
+        for module_path in SignalUtils.get_signal_modules():
+            if module_path not in modules_to_scan:
+                modules_to_scan.append(module_path)
 
         for app_config in SignalUtils.get_installed_app_configs():
             for suffix in ("signals", "handlers"):
@@ -395,7 +361,7 @@ class SignalUtils:
                 if not isinstance(obj, DjangoSignal):
                     continue
                 signal_id = f"{module_path}.{attr_name}"
-                if signal_id in builtin_ids or signal_id in seen_ids:
+                if signal_id in seen_ids:
                     continue
                 seen_ids.add(signal_id)
                 results.append(
@@ -405,11 +371,6 @@ class SignalUtils:
                 )
 
         return results
-
-    @staticmethod
-    def discover_all() -> list[DiscoveredSignal]:
-        """Return all built-in and custom signals."""
-        return SignalUtils.discover_builtin() + SignalUtils.discover_custom()
 
     @staticmethod
     def compute_stats(signals: list[SignalSummary]) -> SignalStats:
