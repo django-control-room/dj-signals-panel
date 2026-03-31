@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "dj_signals_panel",
     "example_project",  # For management commands
+    "app",
 ]
 
 MIDDLEWARE = [
