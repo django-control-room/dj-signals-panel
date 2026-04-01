@@ -49,12 +49,7 @@ jobs:
         run: |
             make test_coverage
         env:
-          TEST_DB_BACKEND: postgresql
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+          TEST_DB_BACKEND: sqlite
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
