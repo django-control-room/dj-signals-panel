@@ -1,2 +1,3 @@
 include README.md
 recursive-include dj_signals_panel/templates *
+recursive-include dj_signals_panel/static *
