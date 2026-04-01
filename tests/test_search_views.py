@@ -10,7 +10,7 @@ The index view is the main landing page of the panel. It:
 """
 
 from django.contrib.auth import get_user_model
-from django.test import Client
+from django.test import Client, override_settings
 from django.urls import reverse
 
 from .base import SignalsPanelTestCase
@@ -231,4 +231,121 @@ class TestIndexViewAppFilter(SignalsPanelTestCase):
         self.assertLess(
             len(filtered.context["signals"]),
             len(all_signals.context["signals"]),
+        )
+
+
+class TestIndexViewSignalModules(SignalsPanelTestCase):
+    """
+    Tests for the SIGNAL_MODULES configuration option.
+
+    SIGNAL_MODULES lets users point the panel at signal modules that are not
+    named '{app}.signals' and therefore would not be discovered automatically.
+    The fixture module 'app.events' is used for this purpose: it lives inside
+    the example app but is never auto-scanned because it is not named 'signals'.
+    """
+
+    # Signals defined in the non-standard fixture module.
+    EXTRA_MODULE = "app.events"
+    EXTRA_SIGNAL_NAMES = {"user_invited", "export_completed"}
+
+    def _signal_ids(self, response):
+        return {s.signal_id for s in response.context["signals"]}
+
+    def _signal_names(self, response):
+        return {s.name for s in response.context["signals"]}
+
+    def test_extra_module_not_discovered_without_setting(self):
+        """app.events signals must be absent when SIGNAL_MODULES is empty."""
+        with override_settings(DJ_SIGNALS_PANEL_SETTINGS={"SIGNAL_MODULES": []}):
+            response = self.client.get(reverse("dj_signals_panel:index"))
+        self.assertTrue(
+            self._signal_names(response).isdisjoint(self.EXTRA_SIGNAL_NAMES),
+            "app.events signals should not appear without SIGNAL_MODULES",
+        )
+
+    @override_settings(
+        DJ_SIGNALS_PANEL_SETTINGS={"SIGNAL_MODULES": ["app.events"]}
+    )
+    def test_extra_module_signals_appear_when_configured(self):
+        """Signals from app.events must appear when it is listed in SIGNAL_MODULES."""
+        response = self.client.get(reverse("dj_signals_panel:index"))
+        self.assertTrue(
+            self.EXTRA_SIGNAL_NAMES.issubset(self._signal_names(response)),
+            f"Expected {self.EXTRA_SIGNAL_NAMES} in discovered signals",
+        )
+
+    @override_settings(
+        DJ_SIGNALS_PANEL_SETTINGS={"SIGNAL_MODULES": ["app.events"]}
+    )
+    def test_extra_module_signal_id_uses_module_path(self):
+        """signal_id must be scoped to the extra module, not app.signals."""
+        response = self.client.get(reverse("dj_signals_panel:index"))
+        extra_ids = {
+            sid for sid in self._signal_ids(response)
+            if sid.startswith(self.EXTRA_MODULE)
+        }
+        self.assertEqual(
+            extra_ids,
+            {f"{self.EXTRA_MODULE}.{name}" for name in self.EXTRA_SIGNAL_NAMES},
+        )
+
+    @override_settings(
+        DJ_SIGNALS_PANEL_SETTINGS={"SIGNAL_MODULES": ["app.events"]}
+    )
+    def test_extra_module_signals_have_correct_app_label(self):
+        """Signals from app.events should resolve to the 'app' app label."""
+        response = self.client.get(reverse("dj_signals_panel:index"))
+        for sig in response.context["signals"]:
+            if sig.name in self.EXTRA_SIGNAL_NAMES:
+                self.assertEqual(
+                    sig.app_label,
+                    "app",
+                    f"Expected app_label='app' for {sig.name!r}",
+                )
+
+    @override_settings(
+        DJ_SIGNALS_PANEL_SETTINGS={"SIGNAL_MODULES": ["app.events"]}
+    )
+    def test_extra_module_signals_are_reachable_on_detail_view(self):
+        """Signals surfaced via SIGNAL_MODULES must have a working detail page."""
+        from django.urls import reverse as r
+        signal_id = f"{self.EXTRA_MODULE}.user_invited"
+        url = r("dj_signals_panel:signal_detail", kwargs={"signal_id": signal_id})
+        with override_settings(DJ_SIGNALS_PANEL_SETTINGS={"SIGNAL_MODULES": ["app.events"]}):
+            response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["signal"].name, "user_invited")
+
+    @override_settings(
+        DJ_SIGNALS_PANEL_SETTINGS={"SIGNAL_MODULES": ["no.such.module.xyz"]}
+    )
+    def test_nonexistent_module_is_silently_skipped(self):
+        """A bad module path in SIGNAL_MODULES must not crash the view."""
+        response = self.client.get(reverse("dj_signals_panel:index"))
+        self.assertEqual(response.status_code, 200)
+
+    @override_settings(
+        DJ_SIGNALS_PANEL_SETTINGS={"SIGNAL_MODULES": ["app.signals"]}
+    )
+    def test_already_scanned_module_does_not_produce_duplicates(self):
+        """Listing an already-auto-scanned module must not duplicate its signals."""
+        response = self.client.get(reverse("dj_signals_panel:index"))
+        all_ids = [s.signal_id for s in response.context["signals"]]
+        self.assertEqual(
+            len(all_ids),
+            len(set(all_ids)),
+            "Duplicate signal_ids found — deduplication is broken",
+        )
+
+    @override_settings(
+        DJ_SIGNALS_PANEL_SETTINGS={
+            "SIGNAL_MODULES": ["app.events", "no.such.module.xyz"]
+        }
+    )
+    def test_multiple_modules_mixed_valid_and_invalid(self):
+        """Valid and invalid entries can coexist: valid signals appear, no crash."""
+        response = self.client.get(reverse("dj_signals_panel:index"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(
+            self.EXTRA_SIGNAL_NAMES.issubset(self._signal_names(response)),
         )
