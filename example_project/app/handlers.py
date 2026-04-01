@@ -54,7 +54,8 @@ def on_user_saved(sender, instance, created, **kwargs):
 @receiver(post_save)
 def on_any_user_saved(sender, instance, created, **kwargs):
     if created:
-        logger.info("Any user saved: %s", instance.username)
+        username = getattr(instance, "username", repr(instance))
+        logger.info("Any user saved: %s", username)
 
 
 def connect_all():
