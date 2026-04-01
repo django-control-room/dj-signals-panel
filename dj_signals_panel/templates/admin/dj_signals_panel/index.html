@@ -1,5 +1,5 @@
 {% extends "admin/dj_signals_panel/base.html" %}
-{% load i18n admin_urls static admin_list %}
+{% load i18n admin_urls static admin_list dj_signals_panel_tags %}
 
 {% block content %}
 <div id="content-main">
@@ -115,7 +115,7 @@
                     </td>
                     <td>
                         <a href="?app={{ sig.app_label }}{% if search_query %}&q={{ search_query }}{% endif %}" class="app-filter-link">
-                            <span class="app-badge">{{ sig.app_label }}</span>
+                            <span class="{{ sig.app_label|dj_signals_panel_add_badge_class }}">{{ sig.app_label }}</span>
                         </a>
                     </td>
                     <td>

@@ -161,15 +161,31 @@
 
 /* ===== APP BADGES ===== */
 
-.app-badge {
+.dj-sp-badge {
     display: inline-block;
     padding: 3px 8px;
     border-radius: 3px;
     font-size: 11px;
     font-weight: bold;
     color: white;
-    background-color: #417690;
 }
+
+.dj-sp-badge-0  { background-color: #3b7fbf; } /* steel blue    */
+.dj-sp-badge-1  { background-color: #7c5cbf; } /* medium purple */
+.dj-sp-badge-2  { background-color: #3a9494; } /* teal          */
+.dj-sp-badge-3  { background-color: #2e8f6e; } /* django green  */
+.dj-sp-badge-4  { background-color: #bf4f70; } /* rose          */
+.dj-sp-badge-5  { background-color: #bf7c3a; } /* warm amber    */
+.dj-sp-badge-6  { background-color: #6a8c3a; } /* olive green   */
+.dj-sp-badge-7  { background-color: #bf5c3a; } /* burnt orange  */
+.dj-sp-badge-8  { background-color: #4f5bbf; } /* indigo        */
+.dj-sp-badge-9  { background-color: #2e8fa8; } /* cyan          */
+.dj-sp-badge-10 { background-color: #9e3a8c; } /* magenta       */
+.dj-sp-badge-11 { background-color: #a89a2e; } /* gold          */
+.dj-sp-badge-12 { background-color: #c0573a; } /* coral         */
+.dj-sp-badge-13 { background-color: #5a6b9e; } /* slate blue    */
+.dj-sp-badge-14 { background-color: #3a7a4f; } /* forest green  */
+.dj-sp-badge-15 { background-color: #a83030; } /* crimson       */
 
 /* ===== DETAIL PAGE ===== */
 
