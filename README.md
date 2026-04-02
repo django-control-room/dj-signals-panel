@@ -13,6 +13,11 @@
 
 See every Django signal and receiver, and where they fire. Right from the Django admin.
 
+**Compatible with [dj-control-room](https://github.com/yassi/dj-control-room).** Register this panel in the Control Room to manage it from a centralized dashboard.
+
+- **Official site:** [djangocontrolroom.com](https://djangocontrolroom.com)
+- **Project repo:** [dj-control-room](https://github.com/yassi/dj-control-room)
+
 
 ## Docs
 
