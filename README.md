@@ -9,9 +9,9 @@
 
 
 
-# Dj Signals Panel
+# Django Signals Panel
 
-Display registered Django signals and receivers, showing what fires and where.
+See every Django signal and receiver, and where they fire. Right from the Django admin.
 
 
 ## Docs
@@ -72,6 +72,8 @@ Browse all registered signals with summary stats (total signals, total receivers
 
 Drill into any signal to see its metadata and every connected receiver — including function name, module, file path, sender, and dispatch UID. Expand **View Source** to see syntax-highlighted source code inline.
 
+> **Note:** The source code viewer is opt-in. Set `SHOW_SOURCE: True` in `DJ_SIGNALS_PANEL_SETTINGS` to enable it. Use `SIGNAL_MODULES` to restrict which modules are scanned for signals.
+
 | Light | Dark |
 |-------|------|
 | ![Signal Detail – light](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_detail.png) | ![Signal Detail – dark](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_detail_dark.png) |
@@ -107,8 +109,11 @@ INSTALLED_APPS = [
 Add any custom configuration to your Django settings if needed:
 
 ```python
-# Optional: Add custom settings for dj_signals_panel
 DJ_SIGNALS_PANEL_SETTINGS = {
+    # Set True to render syntax-highlighted source code for each receiver
+    'SHOW_SOURCE': False,
+    # Limit signal discovery to specific modules (scans all installed apps when empty)
+    'SIGNAL_MODULES': [],       # e.g. ['myapp.signals', 'otherapp.events']
     'LOAD_DEFAULT_CSS': True,   # Set False to skip built-in styles
     # Static paths are relative to app's static/ dir (e.g. 'myapp/css/overrides.css'
     # for a file at myapp/static/myapp/css/overrides.css). Full URLs also accepted.
