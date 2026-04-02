@@ -1,5 +1,7 @@
 # Installation
 
+> **Using Django Control Room?** Dj Signals Panel works as a panel inside [Django Control Room](https://github.com/yassi/dj-control-room). Install both and follow the Control Room setup guide at [djangocontrolroom.com](https://djangocontrolroom.com).
+
 ## 1. Install the Package
 
 ```bash
@@ -25,7 +27,7 @@ INSTALLED_APPS = [
 
 ## 3. Include URLs
 
-Add the Panel URLs to your main `urls.py`:
+Add the Panel URLs to your main `urls.py`. The path must be nested **under** the admin prefix:
 
 ```python
 from django.contrib import admin
@@ -37,13 +39,7 @@ urlpatterns = [
 ]
 ```
 
-## 4. Run Migrations
-
-```bash
-python manage.py migrate
-```
-
-## 5. Access the Panel
+## 4. Access the Panel
 
 1. Start your Django development server:
    ```bash
@@ -52,6 +48,8 @@ python manage.py migrate
 
 2. Navigate to `http://127.0.0.1:8000/admin/`
 
-3. Look for the "DJ SIGNALS PANEL" section
+3. Look for the **DJ SIGNALS PANEL** section - click **Dj Signals Panel** to open it
 
-That's it!
+> **Note:** Dj Signals Panel does not introduce any models or database tables. No migrations are needed.
+
+That's it! See [Configuration](configuration.md) for optional settings like enabling the source code viewer.

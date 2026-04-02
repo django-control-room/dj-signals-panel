@@ -72,7 +72,8 @@ make test_local
 
 ```bash
 pytest tests/test_admin.py -v
-pytest tests/test_admin.py::TestAdminIntegration::test_celery_panel_appears_in_admin_index
+pytest tests/test_search_views.py -v
+pytest tests/test_detail_view.py -v
 ```
 
 ### With Coverage
@@ -86,15 +87,25 @@ pytest --cov=dj_signals_panel tests/
 ```
 dj-signals-panel/
 ├── dj_signals_panel/          # Main package
-│   ├── views.py              # Django views
+│   ├── admin.py              # Admin integration (registers the panel)
+│   ├── apps.py               # AppConfig
+│   ├── conf.py               # Settings and defaults
+│   ├── data.py               # Data-fetching logic
+│   ├── interfaces.py         # Typed data structures
+│   ├── models.py             # Placeholder model (no migrations)
+│   ├── panel.py              # Admin panel class
 │   ├── urls.py               # URL patterns
-│   ├── models.py             # Placeholder model
-│   ├── admin.py              # Admin integration
-│   └── templates/            # HTML templates
+│   ├── utils.py              # Utility helpers
+│   ├── views.py              # Django views
+│   ├── static/               # CSS and vendor assets
+│   ├── templates/            # HTML templates
+│   └── templatetags/         # Custom template tags
 ├── tests/                    # Test suite
 │   ├── base.py               # Test base class
+│   ├── conftest.py           # Pytest configuration
 │   ├── test_admin.py         # Admin integration tests
-│   └── conftest.py           # Pytest configuration
+│   ├── test_search_views.py  # Signal list/search view tests
+│   └── test_detail_view.py   # Signal detail view tests
 ├── example_project/          # Example Django project
 ├── docs/                     # Documentation
 └── Makefile                  # Development commands

@@ -1,38 +1,50 @@
 # Configuration
 
-Dj Signals Panel currently works out of the box with minimal configuration.
-
-## Basic Setup
-
-The only required configuration is adding the app to your `INSTALLED_APPS` and including the URLs in your URL configuration.
-
-See the [Installation](installation.md) guide for setup instructions.
-
-## URLs Configuration
+Dj Signals Panel works out of the box with no required configuration. All options are set via a `DJ_SIGNALS_PANEL_SETTINGS` dict in your Django settings.
 
 ```python
-# urls.py
-urlpatterns = [
-    path('admin/dj-signals-panel/', include('dj_signals_panel.urls')),  # Custom path
-    path('admin/', admin.site.urls),
-]
+DJ_SIGNALS_PANEL_SETTINGS = {
+    'SHOW_SOURCE': False,
+    'SIGNAL_MODULES': [],
+    'LOAD_DEFAULT_CSS': True,
+    'EXTRA_CSS': [],
+}
 ```
 
-## Security
+## Settings Reference
 
-Dj Signals Panel uses Django's built-in admin authentication:
+### `SHOW_SOURCE`
 
-- Only staff users (`is_staff=True`) can access the panel
-- All views require authentication via `@staff_member_required`
-- No additional security configuration needed
+**Type:** `bool`  
+**Default:** `False`  
+**Description:** When `True`, each receiver row on the signal detail page includes an expandable **View Source** section that renders the receiver's source code with syntax highlighting.
 
-## CSS Customization
+```python
+DJ_SIGNALS_PANEL_SETTINGS = {
+    'SHOW_SOURCE': True,
+}
+```
+
+### `SIGNAL_MODULES`
+
+**Type:** `list[str]`  
+**Default:** `[]`  
+**Description:** Additional Python module paths to include in signal discovery, on top of what is found automatically. Useful when your signals are defined in modules that are not picked up by default.
+
+```python
+DJ_SIGNALS_PANEL_SETTINGS = {
+    'SIGNAL_MODULES': [
+        'myapp.signals',
+        'otherapp.events',
+    ],
+}
+```
 
 ### `LOAD_DEFAULT_CSS`
 
 **Type:** `bool`  
 **Default:** `True`  
-**Description:** Whether to load the built-in Signals Panel stylesheet. Set to `False` to use your own styles from scratch.
+**Description:** Whether to load the built-in Signals Panel stylesheet. Set to `False` to provide your own styles from scratch.
 
 ### `EXTRA_CSS`
 
@@ -44,7 +56,6 @@ Static file paths are **relative to your app's `static/` subdirectory** (same co
 
 ```python
 DJ_SIGNALS_PANEL_SETTINGS = {
-    'LOAD_DEFAULT_CSS': True,
     'EXTRA_CSS': [
         # File lives at: myapp/static/myapp/css/overrides.css
         'myapp/css/overrides.css',
@@ -53,3 +64,21 @@ DJ_SIGNALS_PANEL_SETTINGS = {
     ],
 }
 ```
+
+## URLs Configuration
+
+```python
+# urls.py
+urlpatterns = [
+    path('admin/dj-signals-panel/', include('dj_signals_panel.urls')),
+    path('admin/', admin.site.urls),
+]
+```
+
+## Security
+
+Dj Signals Panel uses Django's built-in admin authentication:
+
+- Only staff users (`is_staff=True`) can access the panel
+- All views require authentication via `@staff_member_required`
+- No additional security configuration needed

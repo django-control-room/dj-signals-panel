@@ -25,13 +25,13 @@ See every Django signal and receiver, and where they fire. Right from the Django
 
 ## Features
 
-- **Signal discovery** — automatically discovers all registered Django signals across your project and installed apps
-- **Receiver inspection** — lists every connected receiver for each signal, including function name, module, file location, sender, and dispatch UID
-- **Source code viewer** — inline syntax-highlighted source for each receiver, directly in the admin
-- **Search & filter** — search signals by name, module, or app; filter by app with a dropdown
-- **Summary stats** — at-a-glance counts for total signals, total receivers, and signals with no receivers
-- **Dark mode support** — respects Django admin's built-in dark/light mode toggle
-- **No migrations required** — purely read-only introspection, zero database changes
+- **Signal discovery** - automatically discovers all registered Django signals across your project and installed apps
+- **Receiver inspection** - lists every connected receiver for each signal, including function name, module, file location, sender, and dispatch UID
+- **Source code viewer** - inline syntax-highlighted source for each receiver, directly in the admin
+- **Search & filter** - search signals by name, module, or app; filter by app with a dropdown
+- **Summary stats** - at-a-glance counts for total signals, total receivers, and signals with no receivers
+- **Dark mode support** - respects Django admin's built-in dark/light mode toggle
+- **No migrations required** - purely read-only introspection, zero database changes
 
 
 ### Project Structure
@@ -55,11 +55,21 @@ dj-signals-panel/
 
 
 
+## Django Control Room
+
+Dj Signals Panel works great on its own, and it also pairs seamlessly as a panel inside [Django Control Room](https://github.com/yassi/dj-control-room) - a centralized dashboard that brings all your Django admin panels together in one place.
+
+```bash
+pip install dj-control-room dj-signals-panel
+```
+
+Visit **[djangocontrolroom.com](https://djangocontrolroom.com)** to learn more.
+
 ## Screenshots
 
 ### Django Admin Integration
 
-Seamlessly integrated into your Django admin interface. A **DJ SIGNALS PANEL** section appears alongside your models — no migrations required.
+Seamlessly integrated into your Django admin interface. A **DJ SIGNALS PANEL** section appears alongside your models - no migrations required.
 
 | Light | Dark |
 |-------|------|
@@ -75,9 +85,9 @@ Browse all registered signals with summary stats (total signals, total receivers
 
 ### Signal Detail
 
-Drill into any signal to see its metadata and every connected receiver — including function name, module, file path, sender, and dispatch UID. Expand **View Source** to see syntax-highlighted source code inline.
+Drill into any signal to see its metadata and every connected receiver - including function name, module, file path, sender, and dispatch UID. Expand **View Source** to see syntax-highlighted source code inline.
 
-> **Note:** The source code viewer is opt-in. Set `SHOW_SOURCE: True` in `DJ_SIGNALS_PANEL_SETTINGS` to enable it. Use `SIGNAL_MODULES` to restrict which modules are scanned for signals.
+> **Note:** The source code viewer is opt-in. Set `SHOW_SOURCE: True` in `DJ_SIGNALS_PANEL_SETTINGS` to enable it. Use `SIGNAL_MODULES` to add extra modules to signal discovery.
 
 | Light | Dark |
 |-------|------|
@@ -117,7 +127,7 @@ Add any custom configuration to your Django settings if needed:
 DJ_SIGNALS_PANEL_SETTINGS = {
     # Set True to render syntax-highlighted source code for each receiver
     'SHOW_SOURCE': False,
-    # Limit signal discovery to specific modules (scans all installed apps when empty)
+    # Extra modules to include in signal discovery (additive, not restrictive)
     'SIGNAL_MODULES': [],       # e.g. ['myapp.signals', 'otherapp.events']
     'LOAD_DEFAULT_CSS': True,   # Set False to skip built-in styles
     # Static paths are relative to app's static/ dir (e.g. 'myapp/css/overrides.css'
