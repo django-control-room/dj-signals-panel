@@ -10,6 +10,25 @@ from django.dispatch import Signal as DjangoSignal
 from .conf import panel_config
 
 
+def _resolve_sender_label(sender_id: int) -> str:
+    """
+    Best-effort resolution of a stored sender id() back to a readable label.
+
+    Django's dispatcher only ever stores id(sender) in its lookup key, never
+    the sender itself, so the original object can't be retrieved directly.
+    Most real-world senders are Model classes registered with a receiver via
+    `sender=SomeModel`. In the odd scenario where the sender is not a Model
+    we fall back to a generic label.
+    """
+    from django.apps import apps
+
+    for model in apps.get_models():
+        if id(model) == sender_id:
+            return model.__name__
+
+    return "Specific sender"
+
+
 @dataclass
 class ReceiverInfo:
     """Template-facing data for a single receiver."""
@@ -20,7 +39,6 @@ class ReceiverInfo:
     source_file: str | None
     source_line: int | None
     sender: str | None
-    dispatch_uid: str | None
     source_preview: str | None = None
 
 
@@ -151,15 +169,7 @@ class Receiver:
         sender_id = key[1]
         if sender_id == id(None):
             return None
-        return f"<sender id={sender_id}>"
-
-    @property
-    def dispatch_uid(self) -> str | None:
-        key = self._lookup_key
-        if not isinstance(key, tuple) or len(key) < 1:
-            return None
-        uid = key[0]
-        return uid if isinstance(uid, str) else None
+        return _resolve_sender_label(sender_id)
 
     def to_info(self) -> ReceiverInfo:
         """Return the template-facing DTO for this receiver."""
@@ -170,8 +180,9 @@ class Receiver:
             source_file=self.source_file,
             source_line=self.source_line,
             sender=self.sender,
-            dispatch_uid=self.dispatch_uid,
-            source_preview=self.get_source_preview() if panel_config.get_settings("SHOW_SOURCE") else None,
+            source_preview=self.get_source_preview()
+            if panel_config.get_settings("SHOW_SOURCE")
+            else None,
         )
 
 
