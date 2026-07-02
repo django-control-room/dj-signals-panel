@@ -46,14 +46,14 @@ class TestDetailViewAccess(SignalsPanelTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn("/admin/login/", response.url)
 
-    def test_non_staff_user_is_redirected(self):
+    def test_non_staff_user_gets_permission_denied(self):
         regular_user = User.objects.create_user(
             username="regular", password="pass123", is_staff=False
         )
         client = Client()
         client.force_login(regular_user)
         response = client.get(detail_url(KNOWN_SIGNAL_ID))
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 403)
 
     def test_unknown_signal_id_returns_404(self):
         response = self.client.get(detail_url("app.signals.no_such_signal_xyz"))
@@ -190,6 +190,38 @@ class TestDetailViewReceiverData(SignalsPanelTestCase):
         self.assertEqual(count, 1)
 
 
+class TestDetailViewSenderResolution(SignalsPanelTestCase):
+    """
+    Sender resolution: a receiver connected with sender=SomeModel must show
+    a readable label instead of the raw `<sender id=...>` memory pointer.
+    """
+
+    def test_sender_filtered_receiver_resolves_to_model_label(self):
+        """on_user_saved is connected via post_save.connect(..., sender=User)."""
+        response = self.client.get(detail_url(BUILTIN_SIGNAL_ID))
+        receivers = response.context["receivers"]
+        on_user_saved = next(
+            r for r in receivers if r.function_name == "on_user_saved"
+        )
+        self.assertEqual(on_user_saved.sender, "User")
+
+    def test_sender_label_is_never_a_raw_pointer(self):
+        response = self.client.get(detail_url(BUILTIN_SIGNAL_ID))
+        for r in response.context["receivers"]:
+            if r.sender is not None:
+                self.assertNotIn("id=", r.sender)
+                self.assertNotIn("<sender", r.sender)
+
+    def test_receiver_without_sender_filter_has_none_sender(self):
+        """on_any_user_saved is connected with no sender filter (matches any)."""
+        response = self.client.get(detail_url(BUILTIN_SIGNAL_ID))
+        receivers = response.context["receivers"]
+        on_any_user_saved = next(
+            r for r in receivers if r.function_name == "on_any_user_saved"
+        )
+        self.assertIsNone(on_any_user_saved.sender)
+
+
 class TestDetailViewSourceLocation(SignalsPanelTestCase):
     """
     Tests for source file and line number resolution on ReceiverInfo.
@@ -248,13 +280,14 @@ class TestDetailViewSourcePreview(SignalsPanelTestCase):
     """
     Tests for the optional source preview feature (SHOW_SOURCE setting).
 
-    When SHOW_SOURCE=True (the example project default), each receiver's
-    source code is fetched and stored in ReceiverInfo.source_preview. The
-    template then renders a collapsible <details> block and includes the
-    highlight.js assets.
-
-    When SHOW_SOURCE=False, source_preview is None and neither the block
-    nor the assets appear in the HTML.
+    The collapsible <details> block itself is keyed off source_file, not
+    SHOW_SOURCE - it's how the (potentially long) file:line location is
+    displayed regardless of the setting. When SHOW_SOURCE=True, each
+    receiver's source code is additionally fetched into
+    ReceiverInfo.source_preview and rendered inside that same block, along
+    with the highlight.js assets and a "View Source" label. When
+    SHOW_SOURCE=False, source_preview is None, no code or highlight.js is
+    included, and the block is labelled "View Location" instead.
     """
 
     def test_show_source_true_populates_source_preview(self):
@@ -297,11 +330,14 @@ class TestDetailViewSourcePreview(SignalsPanelTestCase):
         self.assertContains(response, "View Source")
 
     @override_settings(DJ_SIGNALS_PANEL_SETTINGS={"SHOW_SOURCE": False})
-    def test_show_source_false_omits_source_preview_block(self):
-        """With SHOW_SOURCE=False the collapsible source block must not appear."""
+    def test_show_source_false_omits_code_but_keeps_location(self):
+        """With SHOW_SOURCE=False the block still renders (for the file:line
+        location) but must not include source code or the "View Source" label."""
         response = self.client.get(detail_url(KNOWN_SIGNAL_ID))
-        self.assertNotContains(response, "source-preview-details")
+        self.assertContains(response, "source-preview-details")
+        self.assertContains(response, "View Location")
         self.assertNotContains(response, "View Source")
+        self.assertNotContains(response, "language-python")
 
     def test_show_source_true_includes_highlight_js(self):
         """With SHOW_SOURCE=True the page loads the highlight.js asset."""
