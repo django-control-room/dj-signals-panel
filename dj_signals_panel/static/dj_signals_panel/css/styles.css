@@ -2,10 +2,238 @@
  * dj-signals-panel styles.
  *
  * Layout, tables, forms, badges, and metrics all come from the shared
- * dj-control-room-base design system (dcr-* classes). This file only
- * covers the collapsible "View Source" toggle, which has no equivalent
- * component in the design system.
+ * dj-control-room-base design system (dcr-* classes). This file covers
+ * two things the design system doesn't provide:
+ *   1. The collapsible "View Source" toggle.
+ *   2. An extended app-label badge palette (see below).
  */
+
+/* --- Extended app-label badges ----------------------------------------------
+ * Expand the dcr badge colors to 32 variants.
+ */
+:root {
+    --dsp-color-teal: #0f766e;
+    --dsp-color-teal-bg: #ccfbf1;
+    --dsp-color-pink: #be185d;
+    --dsp-color-pink-bg: #fce7f3;
+    --dsp-color-orange: #c2410c;
+    --dsp-color-orange-bg: #ffedd5;
+    --dsp-color-cyan: #0e7490;
+    --dsp-color-cyan-bg: #cffafe;
+    --dsp-color-lime: #4d7c0f;
+    --dsp-color-lime-bg: #ecfccb;
+    --dsp-color-rose: #9f1239;
+    --dsp-color-rose-bg: #ffe4e6;
+    --dsp-color-brown: #6b4423;
+    --dsp-color-brown-bg: #f5ebe0;
+    --dsp-color-slate: #334155;
+    --dsp-color-slate-bg: #e2e8f0;
+    --dsp-color-emerald: #047857;
+    --dsp-color-emerald-bg: #d1fae5;
+    --dsp-color-sky: #0369a1;
+    --dsp-color-sky-bg: #e0f2fe;
+    --dsp-color-violet: #6d28d9;
+    --dsp-color-violet-bg: #f3e8ff;
+    --dsp-color-fuchsia: #a21caf;
+    --dsp-color-fuchsia-bg: #fae8ff;
+    --dsp-color-yellow: #854d0e;
+    --dsp-color-yellow-bg: #fef9c3;
+    --dsp-color-red: #991b1b;
+    --dsp-color-red-bg: #fee2e2;
+    --dsp-color-green: #15803d;
+    --dsp-color-green-bg: #dcfce7;
+    --dsp-color-blue: #1d4ed8;
+    --dsp-color-blue-bg: #dbeafe;
+    --dsp-color-amber: #92400e;
+    --dsp-color-amber-bg: #fef3c7;
+    --dsp-color-gold: #a16207;
+    --dsp-color-gold-bg: #fefce8;
+    --dsp-color-maroon: #7f1d1d;
+    --dsp-color-maroon-bg: #fde8e8;
+    --dsp-color-navy: #1e3a5f;
+    --dsp-color-navy-bg: #dbe9f7;
+    --dsp-color-olive: #4d5c1e;
+    --dsp-color-olive-bg: #eef3d8;
+    --dsp-color-coral: #e4572e;
+    --dsp-color-coral-bg: #ffe8e0;
+    --dsp-color-mint: #0f9d78;
+    --dsp-color-mint-bg: #d7f7ec;
+    --dsp-color-plum: #86198f;
+    --dsp-color-plum-bg: #fbe7f6;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --dsp-color-teal: #2dd4bf;
+        --dsp-color-teal-bg: rgba(45, 212, 191, 0.12);
+        --dsp-color-pink: #f472b6;
+        --dsp-color-pink-bg: rgba(244, 114, 182, 0.12);
+        --dsp-color-orange: #fb923c;
+        --dsp-color-orange-bg: rgba(251, 146, 60, 0.12);
+        --dsp-color-cyan: #22d3ee;
+        --dsp-color-cyan-bg: rgba(34, 211, 238, 0.12);
+        --dsp-color-lime: #a3e635;
+        --dsp-color-lime-bg: rgba(163, 230, 53, 0.12);
+        --dsp-color-rose: #fb7185;
+        --dsp-color-rose-bg: rgba(251, 113, 133, 0.12);
+        --dsp-color-brown: #c8a27a;
+        --dsp-color-brown-bg: rgba(200, 162, 122, 0.12);
+        --dsp-color-slate: #94a3b8;
+        --dsp-color-slate-bg: rgba(148, 163, 184, 0.12);
+        --dsp-color-emerald: #34d399;
+        --dsp-color-emerald-bg: rgba(52, 211, 153, 0.12);
+        --dsp-color-sky: #38bdf8;
+        --dsp-color-sky-bg: rgba(56, 189, 248, 0.12);
+        --dsp-color-violet: #a78bfa;
+        --dsp-color-violet-bg: rgba(167, 139, 250, 0.12);
+        --dsp-color-fuchsia: #e879f9;
+        --dsp-color-fuchsia-bg: rgba(232, 121, 249, 0.12);
+        --dsp-color-yellow: #facc15;
+        --dsp-color-yellow-bg: rgba(250, 204, 21, 0.12);
+        --dsp-color-red: #f87171;
+        --dsp-color-red-bg: rgba(248, 113, 113, 0.12);
+        --dsp-color-green: #4ade80;
+        --dsp-color-green-bg: rgba(74, 222, 128, 0.12);
+        --dsp-color-blue: #60a5fa;
+        --dsp-color-blue-bg: rgba(96, 165, 250, 0.12);
+        --dsp-color-amber: #fbbf24;
+        --dsp-color-amber-bg: rgba(251, 191, 36, 0.12);
+        --dsp-color-gold: #eab308;
+        --dsp-color-gold-bg: rgba(234, 179, 8, 0.12);
+        --dsp-color-maroon: #ef4444;
+        --dsp-color-maroon-bg: rgba(239, 68, 68, 0.12);
+        --dsp-color-navy: #7dabd8;
+        --dsp-color-navy-bg: rgba(125, 171, 216, 0.12);
+        --dsp-color-olive: #b5c96b;
+        --dsp-color-olive-bg: rgba(181, 201, 107, 0.12);
+        --dsp-color-coral: #ff8a65;
+        --dsp-color-coral-bg: rgba(255, 138, 101, 0.12);
+        --dsp-color-mint: #5eead4;
+        --dsp-color-mint-bg: rgba(94, 234, 212, 0.12);
+        --dsp-color-plum: #d946ef;
+        --dsp-color-plum-bg: rgba(217, 70, 239, 0.12);
+    }
+}
+
+.dj-signals-panel-badge--teal {
+    background: var(--dsp-color-teal-bg);
+    color: var(--dsp-color-teal);
+}
+
+.dj-signals-panel-badge--pink {
+    background: var(--dsp-color-pink-bg);
+    color: var(--dsp-color-pink);
+}
+
+.dj-signals-panel-badge--orange {
+    background: var(--dsp-color-orange-bg);
+    color: var(--dsp-color-orange);
+}
+
+.dj-signals-panel-badge--cyan {
+    background: var(--dsp-color-cyan-bg);
+    color: var(--dsp-color-cyan);
+}
+
+.dj-signals-panel-badge--lime {
+    background: var(--dsp-color-lime-bg);
+    color: var(--dsp-color-lime);
+}
+
+.dj-signals-panel-badge--rose {
+    background: var(--dsp-color-rose-bg);
+    color: var(--dsp-color-rose);
+}
+
+.dj-signals-panel-badge--brown {
+    background: var(--dsp-color-brown-bg);
+    color: var(--dsp-color-brown);
+}
+
+.dj-signals-panel-badge--slate {
+    background: var(--dsp-color-slate-bg);
+    color: var(--dsp-color-slate);
+}
+
+.dj-signals-panel-badge--emerald {
+    background: var(--dsp-color-emerald-bg);
+    color: var(--dsp-color-emerald);
+}
+
+.dj-signals-panel-badge--sky {
+    background: var(--dsp-color-sky-bg);
+    color: var(--dsp-color-sky);
+}
+
+.dj-signals-panel-badge--violet {
+    background: var(--dsp-color-violet-bg);
+    color: var(--dsp-color-violet);
+}
+
+.dj-signals-panel-badge--fuchsia {
+    background: var(--dsp-color-fuchsia-bg);
+    color: var(--dsp-color-fuchsia);
+}
+
+.dj-signals-panel-badge--yellow {
+    background: var(--dsp-color-yellow-bg);
+    color: var(--dsp-color-yellow);
+}
+
+.dj-signals-panel-badge--red {
+    background: var(--dsp-color-red-bg);
+    color: var(--dsp-color-red);
+}
+
+.dj-signals-panel-badge--green {
+    background: var(--dsp-color-green-bg);
+    color: var(--dsp-color-green);
+}
+
+.dj-signals-panel-badge--blue {
+    background: var(--dsp-color-blue-bg);
+    color: var(--dsp-color-blue);
+}
+
+.dj-signals-panel-badge--amber {
+    background: var(--dsp-color-amber-bg);
+    color: var(--dsp-color-amber);
+}
+
+.dj-signals-panel-badge--gold {
+    background: var(--dsp-color-gold-bg);
+    color: var(--dsp-color-gold);
+}
+
+.dj-signals-panel-badge--maroon {
+    background: var(--dsp-color-maroon-bg);
+    color: var(--dsp-color-maroon);
+}
+
+.dj-signals-panel-badge--navy {
+    background: var(--dsp-color-navy-bg);
+    color: var(--dsp-color-navy);
+}
+
+.dj-signals-panel-badge--olive {
+    background: var(--dsp-color-olive-bg);
+    color: var(--dsp-color-olive);
+}
+
+.dj-signals-panel-badge--coral {
+    background: var(--dsp-color-coral-bg);
+    color: var(--dsp-color-coral);
+}
+
+.dj-signals-panel-badge--mint {
+    background: var(--dsp-color-mint-bg);
+    color: var(--dsp-color-mint);
+}
+
+.dj-signals-panel-badge--plum {
+    background: var(--dsp-color-plum-bg);
+    color: var(--dsp-color-plum);
+}
 
 .source-preview-details summary {
     cursor: pointer;

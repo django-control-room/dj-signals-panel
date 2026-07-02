@@ -97,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
         <th>{% trans "Module" %}</th>
         <th>{% trans "Location" %}</th>
         <th>{% trans "Sender" %}</th>
-        <th>{% trans "Dispatch UID" %}</th>
       </tr>
     </thead>
     <tbody>
@@ -123,17 +122,10 @@ document.addEventListener('DOMContentLoaded', function () {
           <span class="dcr-text-muted">{% trans "any" %}</span>
           {% endif %}
         </td>
-        <td>
-          {% if r.dispatch_uid %}
-          <code class="dcr-code">{{ r.dispatch_uid }}</code>
-          {% else %}
-          <span class="dcr-text-muted">—</span>
-          {% endif %}
-        </td>
       </tr>
       {% if r.source_preview %}
       <tr>
-        <td colspan="5" class="source-preview-cell">
+        <td colspan="4" class="source-preview-cell">
           <details class="source-preview-details">
             <summary>{% trans "View Source" %}</summary>
             <div class="dcr-code-viewer">
