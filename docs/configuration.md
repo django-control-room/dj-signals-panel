@@ -65,6 +65,28 @@ DJ_SIGNALS_PANEL_SETTINGS = {
 }
 ```
 
+### Theme adapters
+
+Dj Signals Panel builds on `dj-control-room-base`, which ships optional token-override stylesheets for admin skins that don't match the classic Django admin palette. These aren't loaded automatically - add the one you need to `EXTRA_CSS`:
+
+```python
+DJ_SIGNALS_PANEL_SETTINGS = {
+    'EXTRA_CSS': ['dj_control_room_base/css/themes/unfold.css'],
+}
+```
+
+Currently available:
+
+| File | For |
+|---|---|
+| `themes/unfold.css` | Projects using [django-unfold](https://github.com/unfoldadmin/django-unfold) as their admin skin. |
+
+`themes/unfold.css` remaps Dj Signals Panel's accent/surface/border/muted tokens to Unfold's own CSS variables, so the panel matches the host site's configured brand color instead of the classic-admin blue.
+
+![Signal List with django-unfold theme](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_search_unfold.png)
+
+See the [dj-control-room-base configuration docs](https://yassi.github.io/dj-control-room-base/configuration/#theme-adapters) for more on how theme adapters work and how to build your own.
+
 ## URLs Configuration
 
 ```python
