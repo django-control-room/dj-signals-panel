@@ -13,6 +13,9 @@
 
 See every Django signal and receiver, and where they fire. Right from the Django admin.
 
+![DJ Celery Panel](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/dj-signals-panel.png)
+
+
 **Compatible with [dj-control-room](https://github.com/yassi/dj-control-room).** Register this panel in the Control Room to manage it from a centralized dashboard.
 
 - **Official site:** [djangocontrolroom.com](https://djangocontrolroom.com)
@@ -26,7 +29,7 @@ See every Django signal and receiver, and where they fire. Right from the Django
 ## Features
 
 - **Signal discovery** - automatically discovers all registered Django signals across your project and installed apps
-- **Receiver inspection** - lists every connected receiver for each signal, including function name, module, file location, sender, and dispatch UID
+- **Receiver inspection** - lists every connected receiver for each signal, including function name, module, file location, and sender
 - **Source code viewer** - inline syntax-highlighted source for each receiver, directly in the admin
 - **Search & filter** - search signals by name, module, or app; filter by app with a dropdown
 - **Summary stats** - at-a-glance counts for total signals, total receivers, and signals with no receivers
@@ -85,7 +88,7 @@ Browse all registered signals with summary stats (total signals, total receivers
 
 ### Signal Detail
 
-Drill into any signal to see its metadata and every connected receiver - including function name, module, file path, sender, and dispatch UID. Expand **View Source** to see syntax-highlighted source code inline.
+Drill into any signal to see its metadata and every connected receiver - including function name, module, and sender. Expand **View Location** (or **View Source**, when `SHOW_SOURCE` is enabled) to see the file path/line and syntax-highlighted source code inline.
 
 > **Note:** The source code viewer is opt-in. Set `SHOW_SOURCE: True` in `DJ_SIGNALS_PANEL_SETTINGS` to enable it. Use `SIGNAL_MODULES` to add extra modules to signal discovery.
 
