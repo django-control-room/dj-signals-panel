@@ -13,7 +13,7 @@
 
 See every Django signal and receiver, and where they fire. Right from the Django admin.
 
-![DJ Celery Panel](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/dj-signals-panel.png)
+![DJ Signals Panel](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/dj-signals-panel.png)
 
 
 **Compatible with [dj-control-room](https://github.com/yassi/dj-control-room).** Register this panel in the Control Room to manage it from a centralized dashboard.
@@ -74,17 +74,13 @@ Visit **[djangocontrolroom.com](https://djangocontrolroom.com)** to learn more.
 
 Seamlessly integrated into your Django admin interface. A **DJ SIGNALS PANEL** section appears alongside your models - no migrations required.
 
-| Light | Dark |
-|-------|------|
-| ![Admin Home – light](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_home.png) | ![Admin Home – dark](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_home_dark.png) |
+![Admin Home](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_home.png)
 
 ### Signal List & Search
 
 Browse all registered signals with summary stats (total signals, total receivers, signals with no receivers). Search by name, module, or app, and filter by app using the dropdown.
 
-| Light | Dark |
-|-------|------|
-| ![Signal List – light](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_search.png) | ![Signal List – dark](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_search_dark.png) |
+![Signal List](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_search.png)
 
 ### Signal Detail
 
@@ -92,9 +88,7 @@ Drill into any signal to see its metadata and every connected receiver - includi
 
 > **Note:** The source code viewer is opt-in. Set `SHOW_SOURCE: True` in `DJ_SIGNALS_PANEL_SETTINGS` to enable it. Use `SIGNAL_MODULES` to add extra modules to signal discovery.
 
-| Light | Dark |
-|-------|------|
-| ![Signal Detail – light](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_detail.png) | ![Signal Detail – dark](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_detail_dark.png) |
+![Signal Detail](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_detail.png)
 
 
 ## Installation
@@ -103,6 +97,10 @@ Drill into any signal to see its metadata and every connected receiver - includi
 
 ```bash
 pip install dj-signals-panel
+
+# optionally install Django control room as well
+
+pip install dj-control-room
 ```
 
 ### 2. Add to Django Settings
@@ -117,7 +115,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dj_signals_panel',  # Add this line
+    'dj_control_room_base', # add this core library before any panels
+    'dj_signals_panel',     # Signals panel itself
+    'dj_control_room',      # optional if using Django control room
     # ... your other apps
 ]
 ```
@@ -151,7 +151,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/dj-signals-panel/', include('dj_signals_panel.urls')),  # Add this line
+    path("admin/dj-control-room-base/", include("dj_control_room_base.urls")),
+    path('admin/dj-signals-panel/', include('dj_signals_panel.urls')),
+    path("admin/dj-control-room/", include("dj_control_room.urls")),  # optional if using django control room
     path('admin/', admin.site.urls),
 ]
 ```

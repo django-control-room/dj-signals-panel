@@ -17,7 +17,7 @@ DJ_SIGNALS_PANEL_SETTINGS = {
 
 **Type:** `bool`  
 **Default:** `False`  
-**Description:** When `True`, each receiver row on the signal detail page includes an expandable **View Source** section that renders the receiver's source code with syntax highlighting.
+**Description:** Every receiver row on the signal detail page includes an expandable section for its file path/line (labelled **View Location**). When `SHOW_SOURCE` is `True`, that same section is relabelled **View Source** and additionally renders the receiver's source code with syntax highlighting.
 
 ```python
 DJ_SIGNALS_PANEL_SETTINGS = {
