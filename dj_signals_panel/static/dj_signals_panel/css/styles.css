@@ -1,306 +1,366 @@
-/* ===== STATISTICS SECTION ===== */
+/*
+ * dj-signals-panel styles.
+ *
+ * Layout, tables, forms, badges, and metrics all come from the shared
+ * dj-control-room-base design system (dcr-* classes). This file covers
+ * two things the design system doesn't provide:
+ *   1. The collapsible "View Source" toggle.
+ *   2. An extended app-label badge palette (see below).
+ */
 
-.instance-stats {
-    padding-top: 15px;
-    padding-bottom: 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    margin-top: 10px;
+/* --- Extended app-label badges ----------------------------------------------
+ * Expand the dcr badge colors to 32 variants.
+ */
+:root {
+    --dsp-color-teal: #0f766e;
+    --dsp-color-teal-bg: #ccfbf1;
+    --dsp-color-pink: #be185d;
+    --dsp-color-pink-bg: #fce7f3;
+    --dsp-color-orange: #c2410c;
+    --dsp-color-orange-bg: #ffedd5;
+    --dsp-color-cyan: #0e7490;
+    --dsp-color-cyan-bg: #cffafe;
+    --dsp-color-lime: #4d7c0f;
+    --dsp-color-lime-bg: #ecfccb;
+    --dsp-color-rose: #9f1239;
+    --dsp-color-rose-bg: #ffe4e6;
+    --dsp-color-brown: #6b4423;
+    --dsp-color-brown-bg: #f5ebe0;
+    --dsp-color-slate: #334155;
+    --dsp-color-slate-bg: #e2e8f0;
+    --dsp-color-emerald: #047857;
+    --dsp-color-emerald-bg: #d1fae5;
+    --dsp-color-sky: #0369a1;
+    --dsp-color-sky-bg: #e0f2fe;
+    --dsp-color-violet: #6d28d9;
+    --dsp-color-violet-bg: #f3e8ff;
+    --dsp-color-fuchsia: #a21caf;
+    --dsp-color-fuchsia-bg: #fae8ff;
+    --dsp-color-yellow: #854d0e;
+    --dsp-color-yellow-bg: #fef9c3;
+    --dsp-color-red: #991b1b;
+    --dsp-color-red-bg: #fee2e2;
+    --dsp-color-green: #15803d;
+    --dsp-color-green-bg: #dcfce7;
+    --dsp-color-blue: #1d4ed8;
+    --dsp-color-blue-bg: #dbeafe;
+    --dsp-color-amber: #92400e;
+    --dsp-color-amber-bg: #fef3c7;
+    --dsp-color-gold: #a16207;
+    --dsp-color-gold-bg: #fefce8;
+    --dsp-color-maroon: #7f1d1d;
+    --dsp-color-maroon-bg: #fde8e8;
+    --dsp-color-navy: #1e3a5f;
+    --dsp-color-navy-bg: #dbe9f7;
+    --dsp-color-olive: #4d5c1e;
+    --dsp-color-olive-bg: #eef3d8;
+    --dsp-color-coral: #e4572e;
+    --dsp-color-coral-bg: #ffe8e0;
+    --dsp-color-mint: #0f9d78;
+    --dsp-color-mint-bg: #d7f7ec;
+    --dsp-color-plum: #86198f;
+    --dsp-color-plum-bg: #fbe7f6;
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-    gap: 15px;
+/* Dark palette applies from three possible signals, matching dj-control-room-base: */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]):not([x-data]) {
+        --dsp-color-teal: #2dd4bf;
+        --dsp-color-teal-bg: rgba(45, 212, 191, 0.12);
+        --dsp-color-pink: #f472b6;
+        --dsp-color-pink-bg: rgba(244, 114, 182, 0.12);
+        --dsp-color-orange: #fb923c;
+        --dsp-color-orange-bg: rgba(251, 146, 60, 0.12);
+        --dsp-color-cyan: #22d3ee;
+        --dsp-color-cyan-bg: rgba(34, 211, 238, 0.12);
+        --dsp-color-lime: #a3e635;
+        --dsp-color-lime-bg: rgba(163, 230, 53, 0.12);
+        --dsp-color-rose: #fb7185;
+        --dsp-color-rose-bg: rgba(251, 113, 133, 0.12);
+        --dsp-color-brown: #c8a27a;
+        --dsp-color-brown-bg: rgba(200, 162, 122, 0.12);
+        --dsp-color-slate: #94a3b8;
+        --dsp-color-slate-bg: rgba(148, 163, 184, 0.12);
+        --dsp-color-emerald: #34d399;
+        --dsp-color-emerald-bg: rgba(52, 211, 153, 0.12);
+        --dsp-color-sky: #38bdf8;
+        --dsp-color-sky-bg: rgba(56, 189, 248, 0.12);
+        --dsp-color-violet: #a78bfa;
+        --dsp-color-violet-bg: rgba(167, 139, 250, 0.12);
+        --dsp-color-fuchsia: #e879f9;
+        --dsp-color-fuchsia-bg: rgba(232, 121, 249, 0.12);
+        --dsp-color-yellow: #facc15;
+        --dsp-color-yellow-bg: rgba(250, 204, 21, 0.12);
+        --dsp-color-red: #f87171;
+        --dsp-color-red-bg: rgba(248, 113, 113, 0.12);
+        --dsp-color-green: #4ade80;
+        --dsp-color-green-bg: rgba(74, 222, 128, 0.12);
+        --dsp-color-blue: #60a5fa;
+        --dsp-color-blue-bg: rgba(96, 165, 250, 0.12);
+        --dsp-color-amber: #fbbf24;
+        --dsp-color-amber-bg: rgba(251, 191, 36, 0.12);
+        --dsp-color-gold: #eab308;
+        --dsp-color-gold-bg: rgba(234, 179, 8, 0.12);
+        --dsp-color-maroon: #ef4444;
+        --dsp-color-maroon-bg: rgba(239, 68, 68, 0.12);
+        --dsp-color-navy: #7dabd8;
+        --dsp-color-navy-bg: rgba(125, 171, 216, 0.12);
+        --dsp-color-olive: #b5c96b;
+        --dsp-color-olive-bg: rgba(181, 201, 107, 0.12);
+        --dsp-color-coral: #ff8a65;
+        --dsp-color-coral-bg: rgba(255, 138, 101, 0.12);
+        --dsp-color-mint: #5eead4;
+        --dsp-color-mint-bg: rgba(94, 234, 212, 0.12);
+        --dsp-color-plum: #d946ef;
+        --dsp-color-plum-bg: rgba(217, 70, 239, 0.12);
+    }
 }
 
-.stat-item {
-    text-align: center;
-    padding: 10px;
-    border-radius: 3px;
-    border: 1px solid var(--border-color, #ddd);
+/* Explicit dark toggle from Django admin (data-theme="dark") or a Tailwind-style
+   theme switcher (a plain "dark" class on <html>, e.g. django-unfold). */
+:root[data-theme="dark"],
+:root.dark {
+    --dsp-color-teal: #2dd4bf;
+    --dsp-color-teal-bg: rgba(45, 212, 191, 0.12);
+    --dsp-color-pink: #f472b6;
+    --dsp-color-pink-bg: rgba(244, 114, 182, 0.12);
+    --dsp-color-orange: #fb923c;
+    --dsp-color-orange-bg: rgba(251, 146, 60, 0.12);
+    --dsp-color-cyan: #22d3ee;
+    --dsp-color-cyan-bg: rgba(34, 211, 238, 0.12);
+    --dsp-color-lime: #a3e635;
+    --dsp-color-lime-bg: rgba(163, 230, 53, 0.12);
+    --dsp-color-rose: #fb7185;
+    --dsp-color-rose-bg: rgba(251, 113, 133, 0.12);
+    --dsp-color-brown: #c8a27a;
+    --dsp-color-brown-bg: rgba(200, 162, 122, 0.12);
+    --dsp-color-slate: #94a3b8;
+    --dsp-color-slate-bg: rgba(148, 163, 184, 0.12);
+    --dsp-color-emerald: #34d399;
+    --dsp-color-emerald-bg: rgba(52, 211, 153, 0.12);
+    --dsp-color-sky: #38bdf8;
+    --dsp-color-sky-bg: rgba(56, 189, 248, 0.12);
+    --dsp-color-violet: #a78bfa;
+    --dsp-color-violet-bg: rgba(167, 139, 250, 0.12);
+    --dsp-color-fuchsia: #e879f9;
+    --dsp-color-fuchsia-bg: rgba(232, 121, 249, 0.12);
+    --dsp-color-yellow: #facc15;
+    --dsp-color-yellow-bg: rgba(250, 204, 21, 0.12);
+    --dsp-color-red: #f87171;
+    --dsp-color-red-bg: rgba(248, 113, 113, 0.12);
+    --dsp-color-green: #4ade80;
+    --dsp-color-green-bg: rgba(74, 222, 128, 0.12);
+    --dsp-color-blue: #60a5fa;
+    --dsp-color-blue-bg: rgba(96, 165, 250, 0.12);
+    --dsp-color-amber: #fbbf24;
+    --dsp-color-amber-bg: rgba(251, 191, 36, 0.12);
+    --dsp-color-gold: #eab308;
+    --dsp-color-gold-bg: rgba(234, 179, 8, 0.12);
+    --dsp-color-maroon: #ef4444;
+    --dsp-color-maroon-bg: rgba(239, 68, 68, 0.12);
+    --dsp-color-navy: #7dabd8;
+    --dsp-color-navy-bg: rgba(125, 171, 216, 0.12);
+    --dsp-color-olive: #b5c96b;
+    --dsp-color-olive-bg: rgba(181, 201, 107, 0.12);
+    --dsp-color-coral: #ff8a65;
+    --dsp-color-coral-bg: rgba(255, 138, 101, 0.12);
+    --dsp-color-mint: #5eead4;
+    --dsp-color-mint-bg: rgba(94, 234, 212, 0.12);
+    --dsp-color-plum: #d946ef;
+    --dsp-color-plum-bg: rgba(217, 70, 239, 0.12);
 }
 
-.stat-label {
-    font-size: 11px;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #666;
-    margin-bottom: 5px;
+/* Explicit light toggle - always force light tokens even on a dark-OS system. */
+:root[data-theme="light"] {
+    --dsp-color-teal: #0f766e;
+    --dsp-color-teal-bg: #ccfbf1;
+    --dsp-color-pink: #be185d;
+    --dsp-color-pink-bg: #fce7f3;
+    --dsp-color-orange: #c2410c;
+    --dsp-color-orange-bg: #ffedd5;
+    --dsp-color-cyan: #0e7490;
+    --dsp-color-cyan-bg: #cffafe;
+    --dsp-color-lime: #4d7c0f;
+    --dsp-color-lime-bg: #ecfccb;
+    --dsp-color-rose: #9f1239;
+    --dsp-color-rose-bg: #ffe4e6;
+    --dsp-color-brown: #6b4423;
+    --dsp-color-brown-bg: #f5ebe0;
+    --dsp-color-slate: #334155;
+    --dsp-color-slate-bg: #e2e8f0;
+    --dsp-color-emerald: #047857;
+    --dsp-color-emerald-bg: #d1fae5;
+    --dsp-color-sky: #0369a1;
+    --dsp-color-sky-bg: #e0f2fe;
+    --dsp-color-violet: #6d28d9;
+    --dsp-color-violet-bg: #f3e8ff;
+    --dsp-color-fuchsia: #a21caf;
+    --dsp-color-fuchsia-bg: #fae8ff;
+    --dsp-color-yellow: #854d0e;
+    --dsp-color-yellow-bg: #fef9c3;
+    --dsp-color-red: #991b1b;
+    --dsp-color-red-bg: #fee2e2;
+    --dsp-color-green: #15803d;
+    --dsp-color-green-bg: #dcfce7;
+    --dsp-color-blue: #1d4ed8;
+    --dsp-color-blue-bg: #dbeafe;
+    --dsp-color-amber: #92400e;
+    --dsp-color-amber-bg: #fef3c7;
+    --dsp-color-gold: #a16207;
+    --dsp-color-gold-bg: #fefce8;
+    --dsp-color-maroon: #7f1d1d;
+    --dsp-color-maroon-bg: #fde8e8;
+    --dsp-color-navy: #1e3a5f;
+    --dsp-color-navy-bg: #dbe9f7;
+    --dsp-color-olive: #4d5c1e;
+    --dsp-color-olive-bg: #eef3d8;
+    --dsp-color-coral: #e4572e;
+    --dsp-color-coral-bg: #ffe8e0;
+    --dsp-color-mint: #0f9d78;
+    --dsp-color-mint-bg: #d7f7ec;
+    --dsp-color-plum: #86198f;
+    --dsp-color-plum-bg: #fbe7f6;
 }
 
-.stat-value {
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--link-fg, #417690);
+.dj-signals-panel-badge--teal {
+    background: var(--dsp-color-teal-bg);
+    color: var(--dsp-color-teal);
 }
 
-
-/* ===== SEARCH & FILTER ===== */
-
-.search-form {
-    padding: 15px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    border: 1px solid var(--border-color, #ddd);
+.dj-signals-panel-badge--pink {
+    background: var(--dsp-color-pink-bg);
+    color: var(--dsp-color-pink);
 }
 
-.search-form-row {
-    margin-bottom: 0;
+.dj-signals-panel-badge--orange {
+    background: var(--dsp-color-orange-bg);
+    color: var(--dsp-color-orange);
 }
 
-.search-form-fields {
-    display: flex;
-    gap: 15px;
-    align-items: end;
-    margin-bottom: 5px;
+.dj-signals-panel-badge--cyan {
+    background: var(--dsp-color-cyan-bg);
+    color: var(--dsp-color-cyan);
 }
 
-.search-field-group {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+.dj-signals-panel-badge--lime {
+    background: var(--dsp-color-lime-bg);
+    color: var(--dsp-color-lime);
 }
 
-.search-field-group label {
-    font-weight: bold;
-    color: #666;
-    font-size: 11px;
-    text-transform: uppercase;
-    margin-bottom: 3px;
-    white-space: nowrap;
+.dj-signals-panel-badge--rose {
+    background: var(--dsp-color-rose-bg);
+    color: var(--dsp-color-rose);
 }
 
-.search-field-group input[type="text"],
-.search-field-group select {
-    height: 32px;
-    box-sizing: border-box;
+.dj-signals-panel-badge--brown {
+    background: var(--dsp-color-brown-bg);
+    color: var(--dsp-color-brown);
 }
 
-.search-field-group select {
-    min-width: 80px;
-    padding: 6px 8px;
+.dj-signals-panel-badge--slate {
+    background: var(--dsp-color-slate-bg);
+    color: var(--dsp-color-slate);
 }
 
-.search-field-group input[type="submit"] {
-    height: 32px;
-    padding: 6px 15px;
-    box-sizing: border-box;
+.dj-signals-panel-badge--emerald {
+    background: var(--dsp-color-emerald-bg);
+    color: var(--dsp-color-emerald);
 }
 
-.search-help .help {
-    margin: 5px 0 0 0;
-    color: #666;
-    font-size: 11px;
-    font-style: italic;
+.dj-signals-panel-badge--sky {
+    background: var(--dsp-color-sky-bg);
+    color: var(--dsp-color-sky);
 }
 
-.active-filters {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border-color, #ddd);
+.dj-signals-panel-badge--violet {
+    background: var(--dsp-color-violet-bg);
+    color: var(--dsp-color-violet);
 }
 
-.filter-remove {
-    margin-left: 8px;
-    text-decoration: none;
-    color: var(--link-fg, #417690);
-    font-size: 12px;
+.dj-signals-panel-badge--fuchsia {
+    background: var(--dsp-color-fuchsia-bg);
+    color: var(--dsp-color-fuchsia);
 }
 
-.filter-remove:hover {
-    text-decoration: underline;
+.dj-signals-panel-badge--yellow {
+    background: var(--dsp-color-yellow-bg);
+    color: var(--dsp-color-yellow);
 }
 
-/* ===== TABLE ===== */
-
-#result_list {
-    width: 100%;
+.dj-signals-panel-badge--red {
+    background: var(--dsp-color-red-bg);
+    color: var(--dsp-color-red);
 }
 
-.signal-link {
-    text-decoration: none;
+.dj-signals-panel-badge--green {
+    background: var(--dsp-color-green-bg);
+    color: var(--dsp-color-green);
 }
 
-.signal-link code {
-    font-weight: bold;
-    color: var(--link-fg, #417690);
+.dj-signals-panel-badge--blue {
+    background: var(--dsp-color-blue-bg);
+    color: var(--dsp-color-blue);
 }
 
-.signal-link:hover code {
-    text-decoration: underline;
+.dj-signals-panel-badge--amber {
+    background: var(--dsp-color-amber-bg);
+    color: var(--dsp-color-amber);
 }
 
-.module-path {
-    font-size: 11px;
-    color: #666;
+.dj-signals-panel-badge--gold {
+    background: var(--dsp-color-gold-bg);
+    color: var(--dsp-color-gold);
 }
 
-.receiver-name {
-    font-weight: bold;
+.dj-signals-panel-badge--maroon {
+    background: var(--dsp-color-maroon-bg);
+    color: var(--dsp-color-maroon);
 }
 
-.source-location {
-    font-size: 11px;
-    color: #666;
-    word-break: break-all;
+.dj-signals-panel-badge--navy {
+    background: var(--dsp-color-navy-bg);
+    color: var(--dsp-color-navy);
 }
 
-.muted {
-    color: #999;
-    font-style: italic;
+.dj-signals-panel-badge--olive {
+    background: var(--dsp-color-olive-bg);
+    color: var(--dsp-color-olive);
 }
 
-.receiver-count {
-    font-weight: bold;
+.dj-signals-panel-badge--coral {
+    background: var(--dsp-color-coral-bg);
+    color: var(--dsp-color-coral);
 }
 
-.app-filter-link {
-    text-decoration: none;
+.dj-signals-panel-badge--mint {
+    background: var(--dsp-color-mint-bg);
+    color: var(--dsp-color-mint);
 }
 
-/* ===== APP BADGES ===== */
-
-.dj-sp-badge {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 3px;
-    font-size: 11px;
-    font-weight: bold;
-    color: white;
-}
-
-.dj-sp-badge-0  { background-color: #3b7fbf; } /* steel blue    */
-.dj-sp-badge-1  { background-color: #7c5cbf; } /* medium purple */
-.dj-sp-badge-2  { background-color: #3a9494; } /* teal          */
-.dj-sp-badge-3  { background-color: #2e8f6e; } /* django green  */
-.dj-sp-badge-4  { background-color: #bf4f70; } /* rose          */
-.dj-sp-badge-5  { background-color: #bf7c3a; } /* warm amber    */
-.dj-sp-badge-6  { background-color: #6a8c3a; } /* olive green   */
-.dj-sp-badge-7  { background-color: #bf5c3a; } /* burnt orange  */
-.dj-sp-badge-8  { background-color: #4f5bbf; } /* indigo        */
-.dj-sp-badge-9  { background-color: #2e8fa8; } /* cyan          */
-.dj-sp-badge-10 { background-color: #9e3a8c; } /* magenta       */
-.dj-sp-badge-11 { background-color: #a89a2e; } /* gold          */
-.dj-sp-badge-12 { background-color: #c0573a; } /* coral         */
-.dj-sp-badge-13 { background-color: #5a6b9e; } /* slate blue    */
-.dj-sp-badge-14 { background-color: #3a7a4f; } /* forest green  */
-.dj-sp-badge-15 { background-color: #a83030; } /* crimson       */
-
-/* ===== DETAIL PAGE ===== */
-
-.signal-detail-card {
-    margin-bottom: 0;
-}
-
-.signal-detail-card h2 {
-    margin-top: 0;
-}
-
-.key-value-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 10px 0;
-}
-
-.key-value-table th,
-.key-value-table td {
-    padding: 8px 12px;
-    border: 1px solid var(--border-color, #ddd);
-    text-align: left;
-}
-
-.key-value-table th {
-    font-weight: bold;
-    background-color: var(--darkened-bg, rgba(0, 0, 0, 0.05));
-    width: 160px;
-}
-
-.key-value-table tbody tr:nth-child(even) {
-    background-color: var(--darkened-bg, rgba(0, 0, 0, 0.02));
-}
-
-.key-value-table code {
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 12px;
-    background-color: var(--darkened-bg, rgba(0, 0, 0, 0.05));
-}
-
-.providing-arg {
-    margin-right: 6px;
-}
-
-
-/* ===== SOURCE PREVIEW ===== */
-
-.source-preview-row td {
-    padding: 0 12px 8px 12px !important;
-    border-top: none !important;
+.dj-signals-panel-badge--plum {
+    background: var(--dsp-color-plum-bg);
+    color: var(--dsp-color-plum);
 }
 
 .source-preview-details summary {
     cursor: pointer;
-    font-size: 11px;
-    color: var(--link-fg, #417690);
-    padding: 4px 0;
+    font-size: var(--dcr-font-size-sm);
+    color: var(--dcr-color-accent);
+    padding: var(--dcr-space-xs) 0;
 }
 
 .source-preview-details summary:hover {
     text-decoration: underline;
 }
 
-.source-preview {
-    margin: 8px 0 0 0;
-    padding: 12px;
-    border-radius: 4px;
-    background-color: #0d1117;
-    border: 1px solid #30363d;
-    overflow-x: auto;
-    font-size: 12px;
-    line-height: 1.5;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+/* The source-preview row is a continuation of the receiver row above it,
+   so it drops the cell's default top padding. */
+.source-preview-cell {
+    padding-top: 0 !important;
 }
 
-.source-preview code {
-    background: none !important;
-    padding: 0 !important;
-    font-size: inherit;
-}
-
-/* ===== DARK MODE ===== */
-
-@media (prefers-color-scheme: dark) {
-    .stat-label {
-        color: #aaa;
-    }
-
-    .search-field-group label {
-        color: #aaa;
-    }
-
-    .search-help .help {
-        color: #aaa;
-    }
-
-    .module-path {
-        color: #aaa;
-    }
-
-    .source-location {
-        color: #aaa;
-    }
-
-    .muted {
-        color: #777;
-    }
-
-    .signal-link code {
-        color: var(--link-fg, #79aec8);
-    }
-
-    .receiver-count {
-        font-weight: bold;
-    }
+/* Tightens the code viewer's default spacing when nested inside the
+   collapsible <details> toggle. */
+.source-preview-details .dcr-code-viewer {
+    margin: var(--dcr-space-sm) 0 0;
 }

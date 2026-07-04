@@ -6,6 +6,9 @@
 
 ```bash
 pip install dj-signals-panel
+
+# optionally install Django control room as well
+pip install dj-control-room
 ```
 
 ## 2. Add to Django Settings
@@ -20,7 +23,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dj_signals_panel',  # Add this
+    'dj_control_room_base', # add this core library before any panels
+    'dj_signals_panel',     # Signals panel itself
+    'dj_control_room',      # optional if using Django control room
     # ... your other apps
 ]
 ```
@@ -34,7 +39,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    path("admin/dj-control-room-base/", include("dj_control_room_base.urls")),
     path('admin/dj-signals-panel/', include('dj_signals_panel.urls')),
+    path("admin/dj-control-room/", include("dj_control_room.urls")),  # optional if using django control room
     path('admin/', admin.site.urls),
 ]
 ```

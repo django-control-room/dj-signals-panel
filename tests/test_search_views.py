@@ -33,14 +33,14 @@ class TestIndexViewAccess(SignalsPanelTestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn("/admin/login/", response.url)
 
-    def test_non_staff_user_is_redirected(self):
+    def test_non_staff_user_gets_permission_denied(self):
         regular_user = User.objects.create_user(
             username="regular", password="pass123", is_staff=False
         )
         client = Client()
         client.force_login(regular_user)
         response = client.get(reverse("dj_signals_panel:index"))
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 403)
 
 
 class TestIndexViewRendering(SignalsPanelTestCase):

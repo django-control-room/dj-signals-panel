@@ -1,18 +1,17 @@
 {% extends "admin/dj_signals_panel/base.html" %}
-{% load i18n admin_urls static dj_signals_panel_tags %}
+{% load i18n admin_urls static dcr_icons dj_signals_panel_tags %}
 
 {% block extrahead %}
 {{ block.super }}
 {% if dj_cr_show_source %}
-<link rel="stylesheet" href="{% static 'dj_signals_panel/vendor/highlight-github-dark.min.css' %}">
-<script src="{% static 'dj_signals_panel/vendor/highlight.min.js' %}"></script>
-<script src="{% static 'dj_signals_panel/vendor/highlight-python.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'dj_control_room_base/vendor/highlight-github-dark.min.css' %}">
+<script src="{% static 'dj_control_room_base/vendor/highlight.min.js' %}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('details.source-preview-details').forEach(function (details) {
         details.addEventListener('toggle', function () {
             if (details.open) {
-                details.querySelectorAll('pre.source-preview code').forEach(function (el) {
+                details.querySelectorAll('pre.dcr-code-viewer__body code').forEach(function (el) {
                     if (!el.dataset.highlighted) {
                         hljs.highlightElement(el);
                     }
@@ -25,135 +24,124 @@ document.addEventListener('DOMContentLoaded', function () {
 {% endif %}
 {% endblock %}
 
-{% block breadcrumbs %}
-<div class="breadcrumbs">
-    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-    &rsaquo; <a href="{% url 'dj_signals_panel:index' %}">{% trans 'Dj Signals Panel' %}</a>
-    &rsaquo; {{ signal.name }}
-</div>
+{% block panel_breadcrumbs %}
+{{ block.super }}
+&rsaquo; {{ signal.name }}
 {% endblock %}
 
-{% block content %}
-<div id="content-main">
-    <!-- Back to List Link -->
-    <div style="margin-bottom: 20px;">
-        <a href="{% url 'dj_signals_panel:index' %}" style="color: var(--link-fg, #417690); text-decoration: none;">
-            ← {% trans "Back to Signal List" %}
-        </a>
-    </div>
+{% block panel_content %}
 
-    <!-- Signal Metadata Card -->
-    <div class="module signal-detail-card">
-        <h2>{{ signal.name }}</h2>
-        <table class="key-value-table">
-            <tbody>
-                <tr>
-                    <th>{% trans "Signal ID" %}</th>
-                    <td><code>{{ signal.signal_id }}</code></td>
-                </tr>
-                <tr>
-                    <th>{% trans "Module" %}</th>
-                    <td><code>{{ signal.module }}</code></td>
-                </tr>
-                <tr>
-                    <th>{% trans "App" %}</th>
-                    <td><span class="{{ signal.app_label|dj_signals_panel_add_badge_class }}">{{ signal.app_label }}</span></td>
-                </tr>
-                {% if signal.providing_args %}
-                <tr>
-                    <th>{% trans "Providing Args" %}</th>
-                    <td>
-                        {% for arg in signal.providing_args %}
-                            <code class="providing-arg">{{ arg }}</code>
-                        {% endfor %}
-                    </td>
-                </tr>
-                {% endif %}
-                <tr>
-                    <th>{% trans "Receiver Count" %}</th>
-                    <td>
-                        <span class="receiver-count">
-                            {{ receivers|length }}
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<a href="{% url 'dj_signals_panel:index' %}" class="dcr-back-link">{% trans "Back to Signal List" %}</a>
 
-    <!-- Receivers Table -->
-    <div class="module" style="margin-top: 20px;">
-        <h2>{% trans "Connected Receivers" %}</h2>
-        {% if receivers %}
-        <table id="result_list">
-            <thead>
-                <tr>
-                    <th scope="col">
-                        <div class="text">{% trans "Function" %}</div>
-                    </th>
-                    <th scope="col">
-                        <div class="text">{% trans "Module" %}</div>
-                    </th>
-                    <th scope="col">
-                        <div class="text">{% trans "Location" %}</div>
-                    </th>
-                    <th scope="col">
-                        <div class="text">{% trans "Sender" %}</div>
-                    </th>
-                    <th scope="col">
-                        <div class="text">{% trans "Dispatch UID" %}</div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for r in receivers %}
-                <tr class="{% cycle 'row1' 'row2' %}">
-                    <td>
-                        <code class="receiver-name">{{ r.qualname|default:r.function_name }}</code>
-                    </td>
-                    <td>
-                        <code class="module-path">{{ r.module }}</code>
-                    </td>
-                    <td>
-                        {% if r.source_file %}
-                            <code class="source-location">{{ r.source_file }}:{{ r.source_line|default:"?" }}</code>
-                        {% else %}
-                            <span class="muted">{% trans "unknown" %}</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if r.sender %}
-                            <code>{{ r.sender }}</code>
-                        {% else %}
-                            <span class="muted">{% trans "any" %}</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if r.dispatch_uid %}
-                            <code>{{ r.dispatch_uid }}</code>
-                        {% else %}
-                            <span class="muted">—</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% if r.source_preview %}
-                <tr class="source-preview-row">
-                    <td colspan="5">
-                        <details class="source-preview-details">
-                            <summary>{% trans "View Source" %}</summary>
-                            <pre class="source-preview"><code class="language-python">{{ r.source_preview }}</code></pre>
-                        </details>
-                    </td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p class="paginator">
-            {% trans "No receivers are connected to this signal." %}
-        </p>
-        {% endif %}
+<div class="dcr-page-header">
+  <div class="dcr-page-header__main">
+    <div class="dcr-page-header__icon dcr-icon-color--indigo">
+      {% dcr_icon "radio" %}
     </div>
+    <div class="dcr-page-header__body">
+      <div class="dcr-page-header__title-row">
+        <h1 class="dcr-page-header__title dcr-font-mono">{{ signal.name }}</h1>
+        <span class="{{ signal.app_label|dj_signals_panel_badge_variant }}">{{ signal.app_label }}</span>
+      </div>
+      <p class="dcr-page-header__subtitle">
+        <code class="dcr-code">{{ signal.module }}</code>
+      </p>
+    </div>
+  </div>
 </div>
+
+<div class="dcr-section-header">
+  <h2 class="dcr-section-header__title">{% trans "Signal Information" %}</h2>
+</div>
+
+<dl class="dcr-dl">
+  <div class="dcr-dl__row">
+    <dt class="dcr-dl__label">{% trans "Signal ID" %}</dt>
+    <dd class="dcr-dl__value dcr-dl__value--mono">{{ signal.signal_id }}</dd>
+  </div>
+  <div class="dcr-dl__row">
+    <dt class="dcr-dl__label">{% trans "Module" %}</dt>
+    <dd class="dcr-dl__value dcr-dl__value--mono">{{ signal.module }}</dd>
+  </div>
+  <div class="dcr-dl__row">
+    <dt class="dcr-dl__label">{% trans "App" %}</dt>
+    <dd class="dcr-dl__value"><span class="{{ signal.app_label|dj_signals_panel_badge_variant }}">{{ signal.app_label }}</span></dd>
+  </div>
+  {% if signal.providing_args %}
+  <div class="dcr-dl__row">
+    <dt class="dcr-dl__label">{% trans "Providing Args" %}</dt>
+    <dd class="dcr-dl__value">
+      {% for arg in signal.providing_args %}
+      <code class="dcr-code">{{ arg }}</code>
+      {% endfor %}
+    </dd>
+  </div>
+  {% endif %}
+  <div class="dcr-dl__row">
+    <dt class="dcr-dl__label">{% trans "Receiver Count" %}</dt>
+    <dd class="dcr-dl__value"><strong>{{ receivers|length }}</strong></dd>
+  </div>
+</dl>
+
+<div class="dcr-section-header dcr-mt-lg">
+  <h2 class="dcr-section-header__title">{% trans "Connected Receivers" %}</h2>
+</div>
+
+<div class="dcr-data-table">
+  {% if receivers %}
+  <div class="dcr-data-table__scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Function" %}</th>
+          <th>{% trans "Module" %}</th>
+          <th>{% trans "Sender" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in receivers %}
+        <tr>
+          <td>
+            <code class="dcr-code">{{ r.qualname|default:r.function_name }}</code>
+          </td>
+          <td>
+            <code class="dcr-code">{{ r.module }}</code>
+          </td>
+          <td>
+            {% if r.sender %}
+            <code class="dcr-code">{{ r.sender }}</code>
+            {% else %}
+            <span class="dcr-text-muted">{% trans "any" %}</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% if r.source_file %}
+        <tr>
+          <td colspan="3" class="source-preview-cell">
+            <details class="source-preview-details">
+              <summary>{% if r.source_preview %}{% trans "View Source" %}{% else %}{% trans "View Location" %}{% endif %}</summary>
+              <div class="dcr-mt-sm">
+                <span class="dcr-text-sm dcr-text-muted dcr-break-all dcr-font-mono">{{ r.source_file }}:{{ r.source_line|default:"?" }}</span>
+              </div>
+              {% if r.source_preview %}
+              <div class="dcr-code-viewer dcr-mt-sm">
+                <pre class="dcr-code-viewer__body"><code class="language-python">{{ r.source_preview }}</code></pre>
+              </div>
+              {% endif %}
+            </details>
+          </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="dcr-empty">
+    <h2 class="dcr-empty__title">{% trans "No receivers" %}</h2>
+    <p class="dcr-empty__body">{% trans "No receivers are connected to this signal." %}</p>
+  </div>
+  {% endif %}
+</div>
+
 {% endblock %}

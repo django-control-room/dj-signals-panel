@@ -1,13 +1,11 @@
-from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render
-from django.contrib import admin
 from django.http import Http404
 
-from .conf import get_css_context
+from .conf import panel_config
 from .interfaces import SignalListInterface, SignalDetailInterface
 
 
-@staff_member_required
+@panel_config.permission_required("index")
 def index(request):
     """Display panel dashboard with signal list."""
     interface = SignalListInterface()
@@ -27,24 +25,22 @@ def index(request):
     grouped = interface.get_grouped_signals()
     signal_apps = sorted(grouped.keys())
 
-    context = admin.site.each_context(request)
-    context.update(get_css_context())
-    context.update(
-        {
-            "title": "Dj Signals Panel",
-            "signals": signals,
-            "stats": stats,
-            "grouped_signals": grouped,
-            "search_query": search_query,
-            "app_filter": app_filter,
-            "signal_apps": signal_apps,
-            "total_displayed": len(signals),
-        }
+    context = panel_config.get_context(
+        request,
+        title="Dj Signals Panel",
+        dj_cr_show_source=panel_config.get_settings("SHOW_SOURCE"),
+        signals=signals,
+        stats=stats,
+        grouped_signals=grouped,
+        search_query=search_query,
+        app_filter=app_filter,
+        signal_apps=signal_apps,
+        total_displayed=len(signals),
     )
     return render(request, "admin/dj_signals_panel/index.html", context)
 
 
-@staff_member_required
+@panel_config.permission_required("detail")
 def signal_detail(request, signal_id):
     """Display detailed information about a specific signal."""
     interface = SignalDetailInterface(signal_id)
@@ -53,13 +49,11 @@ def signal_detail(request, signal_id):
     if detail is None:
         raise Http404("Signal not found")
 
-    context = admin.site.each_context(request)
-    context.update(get_css_context())
-    context.update(
-        {
-            "title": f"Signal: {detail.name}",
-            "signal": detail,
-            "receivers": detail.receivers,
-        }
+    context = panel_config.get_context(
+        request,
+        title=f"Signal: {detail.name}",
+        dj_cr_show_source=panel_config.get_settings("SHOW_SOURCE"),
+        signal=detail,
+        receivers=detail.receivers,
     )
     return render(request, "admin/dj_signals_panel/detail.html", context)

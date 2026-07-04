@@ -13,6 +13,9 @@
 
 See every Django signal and receiver, and where they fire. Right from the Django admin.
 
+![DJ Signals Panel](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/dj-signals-panel.png)
+
+
 **Compatible with [dj-control-room](https://github.com/yassi/dj-control-room).** Register this panel in the Control Room to manage it from a centralized dashboard.
 
 - **Official site:** [djangocontrolroom.com](https://djangocontrolroom.com)
@@ -26,11 +29,12 @@ See every Django signal and receiver, and where they fire. Right from the Django
 ## Features
 
 - **Signal discovery** - automatically discovers all registered Django signals across your project and installed apps
-- **Receiver inspection** - lists every connected receiver for each signal, including function name, module, file location, sender, and dispatch UID
+- **Receiver inspection** - lists every connected receiver for each signal, including function name, module, file location, and sender
 - **Source code viewer** - inline syntax-highlighted source for each receiver, directly in the admin
 - **Search & filter** - search signals by name, module, or app; filter by app with a dropdown
 - **Summary stats** - at-a-glance counts for total signals, total receivers, and signals with no receivers
 - **Dark mode support** - respects Django admin's built-in dark/light mode toggle
+- **django-unfold theme adapter** - opt-in stylesheet that remaps colors to match [django-unfold](https://github.com/unfoldadmin/django-unfold)'s accent/neutral palette (see [Theme adapters](https://yassi.github.io/dj-signals-panel/configuration/#theme-adapters))
 - **No migrations required** - purely read-only introspection, zero database changes
 
 
@@ -71,27 +75,27 @@ Visit **[djangocontrolroom.com](https://djangocontrolroom.com)** to learn more.
 
 Seamlessly integrated into your Django admin interface. A **DJ SIGNALS PANEL** section appears alongside your models - no migrations required.
 
-| Light | Dark |
-|-------|------|
-| ![Admin Home – light](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_home.png) | ![Admin Home – dark](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_home_dark.png) |
+![Admin Home](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_home.png)
 
 ### Signal List & Search
 
 Browse all registered signals with summary stats (total signals, total receivers, signals with no receivers). Search by name, module, or app, and filter by app using the dropdown.
 
-| Light | Dark |
-|-------|------|
-| ![Signal List – light](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_search.png) | ![Signal List – dark](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_search_dark.png) |
+![Signal List](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_search.png)
 
 ### Signal Detail
 
-Drill into any signal to see its metadata and every connected receiver - including function name, module, file path, sender, and dispatch UID. Expand **View Source** to see syntax-highlighted source code inline.
+Drill into any signal to see its metadata and every connected receiver - including function name, module, and sender. Expand **View Location** (or **View Source**, when `SHOW_SOURCE` is enabled) to see the file path/line and syntax-highlighted source code inline.
 
 > **Note:** The source code viewer is opt-in. Set `SHOW_SOURCE: True` in `DJ_SIGNALS_PANEL_SETTINGS` to enable it. Use `SIGNAL_MODULES` to add extra modules to signal discovery.
 
-| Light | Dark |
-|-------|------|
-| ![Signal Detail – light](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_detail.png) | ![Signal Detail – dark](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_detail_dark.png) |
+![Signal Detail](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_detail.png)
+
+### django-unfold Theme
+
+When running under [django-unfold](https://github.com/unfoldadmin/django-unfold), enable the bundled `unfold.css` [theme adapter](https://yassi.github.io/dj-signals-panel/configuration/#theme-adapters) via `EXTRA_CSS` to match the panel's colors to the host site's accent and neutral palette. This is opt-in - it is **not** applied automatically just because django-unfold is installed.
+
+![Signal List with django-unfold theme](https://raw.githubusercontent.com/yassi/dj-signals-panel/main/images/admin_signal_search_unfold.png)
 
 
 ## Installation
@@ -100,6 +104,10 @@ Drill into any signal to see its metadata and every connected receiver - includi
 
 ```bash
 pip install dj-signals-panel
+
+# optionally install Django control room as well
+
+pip install dj-control-room
 ```
 
 ### 2. Add to Django Settings
@@ -114,7 +122,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dj_signals_panel',  # Add this line
+    'dj_control_room_base', # add this core library before any panels
+    'dj_signals_panel',     # Signals panel itself
+    'dj_control_room',      # optional if using Django control room
     # ... your other apps
 ]
 ```
@@ -148,7 +158,9 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/dj-signals-panel/', include('dj_signals_panel.urls')),  # Add this line
+    path("admin/dj-control-room-base/", include("dj_control_room_base.urls")),
+    path('admin/dj-signals-panel/', include('dj_signals_panel.urls')),
+    path("admin/dj-control-room/", include("dj_control_room.urls")),  # optional if using django control room
     path('admin/', admin.site.urls),
 ]
 ```
