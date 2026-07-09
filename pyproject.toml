@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dj-signals-panel"
-version = "0.2.0"
+version = "0.3.0"
 description = "Display registered Django signals and receivers, showing what fires and where."
 readme = "README.md"
 license = {text = "MIT"}
@@ -36,7 +36,7 @@ classifiers = [
 keywords = ["django", "admin", "panel"]
 dependencies = [
     "Django>=4.2",
-    "dj-control-room-base>=1.1.0",
+    "dj-control-room-base>=1.2.0",
 ]
 
 [project.entry-points."dj_control_room.panels"]

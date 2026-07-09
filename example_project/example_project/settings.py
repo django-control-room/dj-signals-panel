@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "dj_control_room_base",
     "dj_signals_panel",
+    "dj_control_room",
     "example_project",  # For management commands
     "app",
 ]

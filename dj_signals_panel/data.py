@@ -10,23 +10,30 @@ from django.dispatch import Signal as DjangoSignal
 from .conf import panel_config
 
 
-def _resolve_sender_label(sender_id: int) -> str:
+def resolve_sender_model(sender_id: int):
     """
-    Best-effort resolution of a stored sender id() back to a readable label.
+    Best-effort resolution of a stored sender id() back to the actual Model
+    class.
 
     Django's dispatcher only ever stores id(sender) in its lookup key, never
     the sender itself, so the original object can't be retrieved directly.
     Most real-world senders are Model classes registered with a receiver via
-    `sender=SomeModel`. In the odd scenario where the sender is not a Model
-    we fall back to a generic label.
+    `sender=SomeModel`. Returns None if no installed model's id() matches
+    (e.g. the sender isn't a Model at all).
     """
     from django.apps import apps
 
     for model in apps.get_models():
         if id(model) == sender_id:
-            return model.__name__
+            return model
 
-    return "Specific sender"
+    return None
+
+
+def _resolve_sender_label(sender_id: int) -> str:
+    """Best-effort resolution of a stored sender id() back to a readable label."""
+    model = resolve_sender_model(sender_id)
+    return model.__name__ if model is not None else "Specific sender"
 
 
 @dataclass
@@ -121,6 +128,38 @@ class Receiver:
         return self._func is not None
 
     @property
+    def func(self) -> object | None:
+        """The resolved receiver callable (dereferenced from its weakref, if any)."""
+        return self._func
+
+    @property
+    def dispatch_uid(self) -> str | None:
+        """
+        The dispatch_uid this receiver was connected with, if any.
+
+        Django's lookup key is (dispatch_uid, sender_id) when dispatch_uid was
+        provided, or (id(receiver), sender_id) otherwise. Since Django's own
+        docs mandate dispatch_uid be a string, a string first element reliably
+        distinguishes an explicit dispatch_uid from an auto-generated id().
+        """
+        key = self._lookup_key
+        if isinstance(key, tuple) and len(key) >= 1 and isinstance(key[0], str):
+            return key[0]
+        return None
+
+    @property
+    def is_weak(self) -> bool:
+        """Whether this receiver was connected with weak=True (Django's default)."""
+        return isinstance(self._receiver_ref, weakref.ref)
+
+    @property
+    def dotted_path(self) -> str:
+        """Best-effort importable-looking dotted path to the receiver function."""
+        if self.module and self.qualname:
+            return f"{self.module}.{self.qualname}"
+        return self.function_name
+
+    @property
     def function_name(self) -> str:
         return getattr(self._func, "__name__", str(self._func))
 
@@ -170,6 +209,21 @@ class Receiver:
         if sender_id == id(None):
             return None
         return _resolve_sender_label(sender_id)
+
+    @property
+    def sender_model(self):
+        """
+        The actual Model class this receiver is filtered to, or None if the
+        receiver matches any sender (no sender filter was given at connect
+        time) or the sender isn't a resolvable installed Model.
+        """
+        key = self._lookup_key
+        if not isinstance(key, tuple) or len(key) < 2:
+            return None
+        sender_id = key[1]
+        if sender_id == id(None):
+            return None
+        return resolve_sender_model(sender_id)
 
     def to_info(self) -> ReceiverInfo:
         """Return the template-facing DTO for this receiver."""
