@@ -8,7 +8,7 @@ Display registered Django signals and receivers, showing what fires and where.
 
 Dj Signals Panel is a Django admin extension that gives you full visibility into your project's signal landscape - which signals are registered, which receivers are connected, and what that receiver code actually does.
 
-It works great standalone, and also pairs seamlessly as a panel inside [Django Control Room](https://github.com/yassi/dj-control-room) - a centralized dashboard that brings all your Django admin panels together in one place. Visit **[djangocontrolroom.com](https://djangocontrolroom.com)** to learn more.
+It works great standalone, and also pairs seamlessly as a panel inside [Django Control Room](https://github.com/django-control-room/dj-control-room) - a centralized dashboard that brings all your Django admin panels together in one place. Visit **[djangocontrolroom.com](https://djangocontrolroom.com)** to learn more.
 
 ## Quick Links
 

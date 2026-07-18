@@ -1,4 +1,4 @@
-[![Django Control Room Panel](https://img.shields.io/badge/Django%20Control%20Room-Panel-0c4b33?logo=django)](https://github.com/yassi/dj-control-room)
+[![Django Control Room Panel](https://img.shields.io/badge/Django%20Control%20Room-Panel-0c4b33?logo=django)](https://github.com/django-control-room/dj-control-room)
 [![Tests](https://github.com/django-control-room/dj-signals-panel/actions/workflows/test.yml/badge.svg)](https://github.com/django-control-room/dj-signals-panel/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/django-control-room/dj-signals-panel/branch/main/graph/badge.svg)](https://codecov.io/gh/django-control-room/dj-signals-panel)
 [![PyPI version](https://badge.fury.io/py/dj-signals-panel.svg)](https://badge.fury.io/py/dj-signals-panel)
@@ -16,10 +16,10 @@ See every Django signal and receiver, and where they fire. Right from the Django
 ![DJ Signals Panel](https://raw.githubusercontent.com/django-control-room/dj-signals-panel/main/images/dj-signals-panel.png)
 
 
-**Compatible with [dj-control-room](https://github.com/yassi/dj-control-room).** Register this panel in the Control Room to manage it from a centralized dashboard.
+**Compatible with [dj-control-room](https://github.com/django-control-room/dj-control-room).** Register this panel in the Control Room to manage it from a centralized dashboard.
 
 - **Official site:** [djangocontrolroom.com](https://djangocontrolroom.com)
-- **Project repo:** [dj-control-room](https://github.com/yassi/dj-control-room)
+- **Project repo:** [dj-control-room](https://github.com/django-control-room/dj-control-room)
 
 
 ## Docs
@@ -61,7 +61,7 @@ dj-signals-panel/
 
 ## Django Control Room
 
-Dj Signals Panel works great on its own, and it also pairs seamlessly as a panel inside [Django Control Room](https://github.com/yassi/dj-control-room) - a centralized dashboard that brings all your Django admin panels together in one place.
+Dj Signals Panel works great on its own, and it also pairs seamlessly as a panel inside [Django Control Room](https://github.com/django-control-room/dj-control-room) - a centralized dashboard that brings all your Django admin panels together in one place.
 
 ```bash
 pip install dj-control-room dj-signals-panel

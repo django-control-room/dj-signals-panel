@@ -85,7 +85,7 @@ Currently available:
 
 ![Signal List with django-unfold theme](https://raw.githubusercontent.com/django-control-room/dj-signals-panel/main/images/admin_signal_search_unfold.png)
 
-See the [dj-control-room-base configuration docs](https://yassi.github.io/dj-control-room-base/configuration/#theme-adapters) for more on how theme adapters work and how to build your own.
+See the [dj-control-room-base configuration docs](https://django-control-room.github.io/dj-control-room-base/configuration/#theme-adapters) for more on how theme adapters work and how to build your own.
 
 ## URLs Configuration
 

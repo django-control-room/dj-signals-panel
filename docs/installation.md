@@ -1,6 +1,6 @@
 # Installation
 
-> **Using Django Control Room?** Dj Signals Panel works as a panel inside [Django Control Room](https://github.com/yassi/dj-control-room). Install both and follow the Control Room setup guide at [djangocontrolroom.com](https://djangocontrolroom.com).
+> **Using Django Control Room?** Dj Signals Panel works as a panel inside [Django Control Room](https://github.com/django-control-room/dj-control-room). Install both and follow the Control Room setup guide at [djangocontrolroom.com](https://djangocontrolroom.com).
 
 ## 1. Install the Package
 
