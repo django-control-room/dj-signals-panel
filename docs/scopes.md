@@ -31,7 +31,7 @@ DJ_SIGNALS_PANEL_SETTINGS = {
         # receiver's source code (SHOW_SOURCE) is restricted to a
         # dedicated group, even though staff can view it freely in
         # the admin's "View Source" panel.
-        'agent_receiver_inspect': {'allowed_groups': ['ai-agents-readonly']},
+        'agent_receiver_inspect': {'ALLOWED_GROUPS': ['ai-agents-readonly']},
     },
 }
 ```

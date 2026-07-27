@@ -117,7 +117,7 @@ DJ_SIGNALS_PANEL_SETTINGS = {
 ```python
 DJ_SIGNALS_PANEL_SETTINGS = {
     'SCOPE_PERMISSIONS': {
-        'agent_receiver_inspect': {'allowed_groups': ['ai-agents']},
+        'agent_receiver_inspect': {'ALLOWED_GROUPS': ['ai-agents']},
     },
 }
 ```
