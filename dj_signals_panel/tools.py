@@ -39,7 +39,7 @@ registry = ToolRegistry()
 
 @registry.register(
     name="list_signals",
-    scope="introspect",
+    scope="agent_signal_list",
     description=(
         "List every signal Dj Signals Panel can see (Django built-ins "
         "and app-defined), with receiver counts and any senders "
@@ -99,7 +99,7 @@ def handle_list_signals(ctx: PanelToolContext) -> PanelToolResult:
 
 @registry.register(
     name="get_receivers",
-    scope="introspect",
+    scope="agent_receiver_list",
     description=(
         "List the receivers connected to a signal: dotted path, "
         "dispatch_uid, weak/strong ref, and sender filter."
@@ -143,7 +143,7 @@ def handle_get_receivers(ctx: PanelToolContext) -> PanelToolResult:
 
 @registry.register(
     name="find_signal_by_sender",
-    scope="introspect",
+    scope="agent_signal_lookup",
     description=(
         "Reverse lookup: given a model, find every signal/receiver "
         "that fires for it (e.g. 'what fires when Order is saved')."
@@ -211,7 +211,7 @@ def handle_find_signal_by_sender(ctx: PanelToolContext) -> PanelToolResult:
 
 @registry.register(
     name="inspect_receiver",
-    scope="introspect",
+    scope="agent_receiver_inspect",
     description=(
         "Resolve a receiver's dotted path to its source file/line "
         "(and any signals it's currently connected to), so an agent "

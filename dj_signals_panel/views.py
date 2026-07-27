@@ -5,7 +5,7 @@ from .conf import panel_config
 from .interfaces import SignalListInterface, SignalDetailInterface
 
 
-@panel_config.permission_required("index")
+@panel_config.permission_required("signal_list")
 def index(request):
     """Display panel dashboard with signal list."""
     interface = SignalListInterface()
@@ -40,7 +40,7 @@ def index(request):
     return render(request, "admin/dj_signals_panel/index.html", context)
 
 
-@panel_config.permission_required("detail")
+@panel_config.permission_required("signal_detail")
 def signal_detail(request, signal_id):
     """Display detailed information about a specific signal."""
     interface = SignalDetailInterface(signal_id)

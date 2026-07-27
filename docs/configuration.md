@@ -2,6 +2,8 @@
 
 Dj Signals Panel works out of the box with no required configuration. All options are set via a `DJ_SIGNALS_PANEL_SETTINGS` dict in your Django settings.
 
+For access control specifically (locking down individual views or MCP tools by group), see [Scopes](scopes.md).
+
 ```python
 DJ_SIGNALS_PANEL_SETTINGS = {
     'SHOW_SOURCE': False,
@@ -86,6 +88,41 @@ Currently available:
 ![Signal List with django-unfold theme](https://raw.githubusercontent.com/django-control-room/dj-signals-panel/main/images/admin_signal_search_unfold.png)
 
 See the [dj-control-room-base configuration docs](https://django-control-room.github.io/dj-control-room-base/configuration/#theme-adapters) for more on how theme adapters work and how to build your own.
+
+## Panel Tools (MCP)
+
+Dj Signals Panel ships `dj_signals_panel/tools.py`, a `ToolRegistry` of MCP-facing tools that [dj-control-room](https://github.com/django-control-room/dj-control-room) aggregates and exposes to AI agents (Cursor, Claude, etc.) over its MCP endpoint.
+
+| Tool | Description |
+|---|---|
+| `list_signals` | List every signal Dj Signals Panel can see (Django built-ins and app-defined), with receiver counts and bound senders. Filter by `app_label` and `query`. |
+| `get_receivers` | List the receivers connected to a signal: dotted path, `dispatch_uid`, weak/strong ref, and sender filter. Look up by `signal` (dotted signal id). |
+| `find_signal_by_sender` | Reverse lookup: given a `model`, find every signal/receiver that fires for it (e.g. "what fires when Order is saved"). |
+| `inspect_receiver` | Resolve a receiver's `dotted_path` to its source file/line and any signals it's currently connected to, so an agent can jump straight to the function instead of grepping. |
+
+`inspect_receiver` only returns metadata by default. Enable a source code preview in its results with the same `SHOW_SOURCE` setting used by the admin UI's receiver detail view:
+
+```python
+DJ_SIGNALS_PANEL_SETTINGS = {
+    'SHOW_SOURCE': True,
+}
+```
+
+### `SCOPE_PERMISSIONS`
+
+**Type:** `dict`  
+**Default:** `{}`  
+**Description:** Restrict individual tool scopes (or view scopes) independently of the panel's default permission checks. Each of the four panel tools ships under its own scope (`agent_signal_list`, `agent_receiver_list`, `agent_signal_lookup`, `agent_receiver_inspect`), separate from the view scopes humans hit in the admin UI, so agent access can be governed independently.
+
+```python
+DJ_SIGNALS_PANEL_SETTINGS = {
+    'SCOPE_PERMISSIONS': {
+        'agent_receiver_inspect': {'ALLOWED_GROUPS': ['ai-agents']},
+    },
+}
+```
+
+See [Scopes](scopes.md) for the full list of view and tool scopes, and the [dj-control-room-base Panel Tools guide](https://django-control-room.github.io/dj-control-room-base/building-panels/#panel-tools) for the underlying API.
 
 ## URLs Configuration
 
