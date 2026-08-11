@@ -8,14 +8,14 @@ Display registered Django signals and receivers, showing what fires and where.
 
 Dj Signals Panel is a Django admin extension that gives you full visibility into your project's signal landscape - which signals are registered, which receivers are connected, and what that receiver code actually does.
 
-It works great standalone, and also pairs seamlessly as a panel inside [Django Control Room](https://github.com/django-control-room/dj-control-room) - a centralized dashboard that brings all your Django admin panels together in one place. Visit **[djangocontrolroom.com](https://djangocontrolroom.com)** to learn more.
+It works great standalone, and also pairs seamlessly as a panel inside [Django Control Room](https://django-control-room.github.io/dj-control-room/) - a centralized dashboard that brings all your Django admin panels together in one place. Visit **[djangocontrolroom.com](https://djangocontrolroom.com)** to learn more.
 
 ## Quick Links
 
 - [Installation](installation.md)
 - [Configuration](configuration.md)
 - [Scopes](scopes.md)
-- [Development](contributing.md)
+- [Contributing](contributing.md)
 
 ## Features
 
@@ -28,7 +28,7 @@ It works great standalone, and also pairs seamlessly as a panel inside [Django C
 - **Dark mode support** - respects Django admin's built-in dark/light mode toggle
 - **django-unfold theme adapter** - opt-in stylesheet that remaps colors to match [django-unfold](https://github.com/unfoldadmin/django-unfold)'s accent/neutral palette (see [Theme adapters](configuration.md#theme-adapters))
 - **django-jazzmin theme adapter** - opt-in stylesheet that remaps colors to match [django-jazzmin](https://github.com/farridav/django-jazzmin)'s Bootstrap 5 / Bootswatch palette (see [Theme adapters](configuration.md#theme-adapters))
-- **AI Agent Integration (MCP)** - exposes `list_signals`, `get_receivers`, `find_signal_by_sender`, and `inspect_receiver` tools so AI agents (Cursor, Claude, etc.) can introspect your signal landscape via [dj-control-room](https://github.com/django-control-room/dj-control-room)'s MCP server (see [Panel Tools](configuration.md#panel-tools-mcp))
+- **AI Agent Integration (MCP)** - exposes `list_signals`, `get_receivers`, `find_signal_by_sender`, and `inspect_receiver` tools so AI agents (Cursor, Claude, etc.) can introspect your signal landscape via [dj-control-room](https://django-control-room.github.io/dj-control-room/)'s MCP server (see [Panel Tools](configuration.md#panel-tools-mcp))
 - **No migrations required** - purely read-only introspection, zero database changes
 
 ## Screenshots
