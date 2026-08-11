@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://django-control-room.github.io/dj-signals-panel/</loc>
+         <lastmod>2026-08-11</lastmod>
+    </url>
+    <url>
+         <loc>https://django-control-room.github.io/dj-signals-panel/configuration/</loc>
+         <lastmod>2026-08-11</lastmod>
+    </url>
+    <url>
+         <loc>https://django-control-room.github.io/dj-signals-panel/contributing/</loc>
+         <lastmod>2026-08-11</lastmod>
+    </url>
+    <url>
+         <loc>https://django-control-room.github.io/dj-signals-panel/installation/</loc>
+         <lastmod>2026-08-11</lastmod>
+    </url>
+    <url>
+         <loc>https://django-control-room.github.io/dj-signals-panel/scopes/</loc>
+         <lastmod>2026-08-11</lastmod>
+    </url>
+</urlset>
